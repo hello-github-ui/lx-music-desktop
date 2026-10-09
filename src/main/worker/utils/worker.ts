@@ -4,6 +4,6 @@ import nodeEndpoint from 'comlink/dist/esm/node-adapter'
 
 
 export const exposeWorker = (obj: any) => {
-  if (worker.parentPort == null) return
-  Comlink.expose(obj, nodeEndpoint(worker.parentPort))
+    if (worker.parentPort == null) return
+    Comlink.expose(obj, nodeEndpoint(worker.parentPort))
 }

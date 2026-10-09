@@ -1,24 +1,24 @@
 import {
-  ref,
-  reactive,
-  computed,
-  watch,
-  watchEffect,
-  nextTick,
-  onMounted,
-  onBeforeUnmount,
-  toRaw,
-  useCssModule,
-  toRef,
-  toRefs,
-  shallowRef,
-  unref,
-  markRaw,
-  type ComputedRef,
-  type Ref,
-  type ShallowRef,
-  shallowReactive,
-  withDefaults,
+    computed,
+    type ComputedRef,
+    markRaw,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    reactive,
+    ref,
+    type Ref,
+    shallowReactive,
+    shallowRef,
+    type ShallowRef,
+    toRaw,
+    toRef,
+    toRefs,
+    unref,
+    useCssModule,
+    watch,
+    watchEffect,
+    withDefaults,
 } from 'vue'
 // import { useStore } from 'vuex'
 
@@ -49,34 +49,34 @@ import {
 // }
 
 export const markRawList = <T extends any[]>(list: T) => {
-  for (const item of list) {
-    markRaw(item)
-  }
-  return list
+    for (const item of list) {
+        markRaw(item)
+    }
+    return list
 }
 
 export {
-  nextTick,
-  onBeforeUnmount,
-  ref,
-  toRaw,
-  reactive,
-  watch,
-  watchEffect,
-  computed,
-  useCssModule,
-  toRef,
-  toRefs,
-  shallowRef,
-  unref,
-  onMounted,
-  markRaw,
-  shallowReactive,
-  withDefaults,
+    nextTick,
+    onBeforeUnmount,
+    ref,
+    toRaw,
+    reactive,
+    watch,
+    watchEffect,
+    computed,
+    useCssModule,
+    toRef,
+    toRefs,
+    shallowRef,
+    unref,
+    onMounted,
+    markRaw,
+    shallowReactive,
+    withDefaults,
 }
 
 export type {
-  ComputedRef,
-  Ref,
-  ShallowRef,
+    ComputedRef,
+    Ref,
+    ShallowRef,
 }

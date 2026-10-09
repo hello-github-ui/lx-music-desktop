@@ -1,11 +1,10 @@
-import { getDB } from '../../db'
+import {getDB} from '../../db'
 import {
-  createQueryStatement,
-  createInsertStatement,
-  createDeleteStatement,
-  // createUpdateStatement,
-  createClearStatement,
-  createCountStatement,
+    createClearStatement,
+    createCountStatement,
+    createDeleteStatement,
+    createInsertStatement,
+    createQueryStatement,
 } from './statements'
 
 /**
@@ -14,8 +13,8 @@ import {
  * @returns url
  */
 export const queryMusicUrl = (id: string) => {
-  const queryStatement = createQueryStatement()
-  return (queryStatement.get(id) as { url: string } | null)?.url ?? null
+    const queryStatement = createQueryStatement()
+    return (queryStatement.get(id) as { url: string } | null)?.url ?? null
 }
 
 /**
@@ -23,15 +22,15 @@ export const queryMusicUrl = (id: string) => {
  * @param urlInfo 列表
  */
 export const insertMusicUrl = (urlInfo: LX.DBService.MusicUrlInfo[]) => {
-  const db = getDB()
-  const insertStatement = createInsertStatement()
-  const deleteStatement = createDeleteStatement()
-  db.transaction((urlInfo: LX.DBService.MusicUrlInfo[]) => {
-    for (const info of urlInfo) {
-      deleteStatement.run(info.id)
-      insertStatement.run(info)
-    }
-  })(urlInfo)
+    const db = getDB()
+    const insertStatement = createInsertStatement()
+    const deleteStatement = createDeleteStatement()
+    db.transaction((urlInfo: LX.DBService.MusicUrlInfo[]) => {
+        for (const info of urlInfo) {
+            deleteStatement.run(info.id)
+            insertStatement.run(info)
+        }
+    })(urlInfo)
 }
 
 /**
@@ -39,11 +38,11 @@ export const insertMusicUrl = (urlInfo: LX.DBService.MusicUrlInfo[]) => {
  * @param ids 列表
  */
 export const deleteMusicUrl = (ids: string[]) => {
-  const db = getDB()
-  const deleteStatement = createDeleteStatement()
-  db.transaction((ids: string[]) => {
-    for (const id of ids) deleteStatement.run(id)
-  })(ids)
+    const db = getDB()
+    const deleteStatement = createDeleteStatement()
+    db.transaction((ids: string[]) => {
+        for (const id of ids) deleteStatement.run(id)
+    })(ids)
 }
 
 /**
@@ -62,14 +61,14 @@ export const deleteMusicUrl = (ids: string[]) => {
  * 清空歌曲url
  */
 export const clearMusicUrl = () => {
-  const clearStatement = createClearStatement()
-  clearStatement.run()
+    const clearStatement = createClearStatement()
+    clearStatement.run()
 }
 
 /**
  * 统计歌曲信息数量
  */
 export const countMusicUrl = () => {
-  const countStatement = createCountStatement()
-  return (countStatement.get() as { count: number }).count
+    const countStatement = createCountStatement()
+    return (countStatement.get() as { count: number }).count
 }

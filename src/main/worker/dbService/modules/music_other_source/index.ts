@@ -1,21 +1,15 @@
-import {
-  queryMusicInfo,
-  insertMusicInfo,
-  deleteMusicInfo,
-  clearMusicInfo,
-  countMusicInfo,
-} from './dbHelper'
+import {clearMusicInfo, countMusicInfo, deleteMusicInfo, insertMusicInfo, queryMusicInfo,} from './dbHelper'
 
 
 const toDBMusicInfo = (id: string, musicInfos: LX.Music.MusicInfo[]): LX.DBService.MusicInfoOtherSource[] => {
-  return musicInfos.map((info, index) => {
-    return {
-      ...info,
-      meta: JSON.stringify(info.meta),
-      source_id: id,
-      order: index,
-    }
-  })
+    return musicInfos.map((info, index) => {
+        return {
+            ...info,
+            meta: JSON.stringify(info.meta),
+            source_id: id,
+            order: index,
+        }
+    })
 }
 
 /**
@@ -24,18 +18,18 @@ const toDBMusicInfo = (id: string, musicInfos: LX.Music.MusicInfo[]): LX.DBServi
  * @returns 歌词信息
  */
 export const getMusicInfoOtherSource = (id: string): LX.Music.MusicInfoOnline[] => {
-  const list = queryMusicInfo(id).sort((a, b) => a.order - b.order).map(info => {
-    return {
-      id: info.id,
-      name: info.name,
-      singer: info.singer,
-      source: info.source,
-      interval: info.interval,
-      meta: JSON.parse(info.meta),
-    }
-  })
+    const list = queryMusicInfo(id).sort((a, b) => a.order - b.order).map(info => {
+        return {
+            id: info.id,
+            name: info.name,
+            singer: info.singer,
+            source: info.source,
+            interval: info.interval,
+            meta: JSON.parse(info.meta),
+        }
+    })
 
-  return list
+    return list
 }
 
 /**
@@ -44,7 +38,7 @@ export const getMusicInfoOtherSource = (id: string): LX.Music.MusicInfoOnline[] 
  * @param musicInfos 歌词信息
  */
 export const musicInfoOtherSourceAdd = (id: string, musicInfos: LX.Music.MusicInfoOnline[]) => {
-  insertMusicInfo(toDBMusicInfo(id, musicInfos))
+    insertMusicInfo(toDBMusicInfo(id, musicInfos))
 }
 
 /**
@@ -52,14 +46,14 @@ export const musicInfoOtherSourceAdd = (id: string, musicInfos: LX.Music.MusicIn
  * @param ids 歌曲id
  */
 export const musicInfoOtherSourceRemove = (ids: string[]) => {
-  deleteMusicInfo(ids)
+    deleteMusicInfo(ids)
 }
 
 /**
  * 清空歌曲信息信息
  */
 export const musicInfoOtherSourceClear = () => {
-  clearMusicInfo()
+    clearMusicInfo()
 }
 
 
@@ -67,6 +61,6 @@ export const musicInfoOtherSourceClear = () => {
  * 统计歌曲信息信息数量
  */
 export const musicInfoOtherSourceCount = () => {
-  return countMusicInfo()
+    return countMusicInfo()
 }
 

@@ -1,8 +1,8 @@
 export {
-  startServer,
-  stopServer,
-  getStatus,
-  generateCode,
-  getDevices,
-  removeDevice,
+    startServer,
+    stopServer,
+    getStatus,
+    generateCode,
+    getDevices,
+    removeDevice,
 } from './server'

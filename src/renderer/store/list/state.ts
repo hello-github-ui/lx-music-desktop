@@ -1,11 +1,11 @@
-import { reactive } from '@common/utils/vueTools'
+import {reactive} from '@common/utils/vueTools'
 
 export {
-  allMusicList,
-  defaultList,
-  loveList,
-  tempList,
-  userLists,
+    allMusicList,
+    defaultList,
+    loveList,
+    tempList,
+    userLists,
 } from '@renderer/store/list/listManage'
 // import { reactive, ref, markRaw, Ref } from '@common/utils/vueTools'
 
@@ -32,7 +32,7 @@ export {
 // })
 
 export const tempListMeta = {
-  id: '',
+    id: '',
 }
 
 

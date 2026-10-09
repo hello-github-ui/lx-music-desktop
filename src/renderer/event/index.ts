@@ -1,37 +1,37 @@
-import { getHotKeyConfig, onFocus, onKeyDown, onUpdateHotkey } from '@renderer/utils/ipc'
-import { registerKeyEvent, createKeyEventHub } from './keyEvent'
+import {getHotKeyConfig, onFocus, onKeyDown, onUpdateHotkey} from '@renderer/utils/ipc'
+import {createKeyEventHub, registerKeyEvent} from './keyEvent'
 // import { registerRendererEvents, unregisterRendererEvents } from './rendererEvent'
-import { createAppEventHub } from './appEvent'
+import {createAppEventHub} from './appEvent'
 
 export const registerEvents = () => {
-  window.lx.isEditingHotKey = false
-  window.app_event = createAppEventHub()
-  window.key_event = createKeyEventHub()
+    window.lx.isEditingHotKey = false
+    window.app_event = createAppEventHub()
+    window.key_event = createKeyEventHub()
 
-  const setHotkeyConfig = ({ local, global }: LX.HotKeyConfigAll) => {
-    window.lx.appHotKeyConfig = {
-      local,
-      global,
+    const setHotkeyConfig = ({local, global}: LX.HotKeyConfigAll) => {
+        window.lx.appHotKeyConfig = {
+            local,
+            global,
+        }
     }
-  }
 
-  void getHotKeyConfig().then(setHotkeyConfig)
+    void getHotKeyConfig().then(setHotkeyConfig)
 
-  onUpdateHotkey(({ params }) => {
-    setHotkeyConfig(params)
-  })
+    onUpdateHotkey(({params}) => {
+        setHotkeyConfig(params)
+    })
 
-  onKeyDown(({ params: { key } }) => {
-    const keyInfo = window.lx.appHotKeyConfig.global.keys[key]
-    if (keyInfo) window.key_event.emit(keyInfo.action)
-  })
+    onKeyDown(({params: {key}}) => {
+        const keyInfo = window.lx.appHotKeyConfig.global.keys[key]
+        if (keyInfo) window.key_event.emit(keyInfo.action)
+    })
 
-  onFocus(() => {
-    window.app_event.focus()
-  })
+    onFocus(() => {
+        window.app_event.focus()
+    })
 
-  registerKeyEvent()
-  // registerRendererEvents()
+    registerKeyEvent()
+    // registerRendererEvents()
 }
 
 // export const unregisterEvents = () => {
@@ -39,9 +39,9 @@ export const registerEvents = () => {
 //   // unregisterRendererEvents()
 // }
 
-export { clearDownKeys } from './keyEvent'
+export {clearDownKeys} from './keyEvent'
 
-export type { AppEventTypes } from './appEvent'
-export type { KeyEventTypes } from './keyEvent'
+export type {AppEventTypes} from './appEvent'
+export type {KeyEventTypes} from './keyEvent'
 
 registerEvents()

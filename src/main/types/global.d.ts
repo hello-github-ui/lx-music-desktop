@@ -1,5 +1,3 @@
-
-
 // // declare module NodeJS {
 // //   interface Global {
 // //     isDev: boolean

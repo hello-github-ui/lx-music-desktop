@@ -1,10 +1,4 @@
-import {
-  queryMusicUrl,
-  insertMusicUrl,
-  deleteMusicUrl,
-  clearMusicUrl,
-  countMusicUrl,
-} from './dbHelper'
+import {clearMusicUrl, countMusicUrl, deleteMusicUrl, insertMusicUrl, queryMusicUrl,} from './dbHelper'
 
 
 /**
@@ -13,8 +7,8 @@ import {
  * @returns 歌曲url
  */
 export const getMusicUrl = (id: string): string | null => {
-  const url = queryMusicUrl(id)
-  return url
+    const url = queryMusicUrl(id)
+    return url
 }
 
 /**
@@ -22,7 +16,7 @@ export const getMusicUrl = (id: string): string | null => {
  * @param urlInfos url信息
  */
 export const musicUrlSave = (urlInfos: LX.Music.MusicUrlInfo[]) => {
-  insertMusicUrl(urlInfos)
+    insertMusicUrl(urlInfos)
 }
 
 /**
@@ -30,20 +24,20 @@ export const musicUrlSave = (urlInfos: LX.Music.MusicUrlInfo[]) => {
  * @param ids 歌曲id
  */
 export const musicUrlRemove = (ids: string[]) => {
-  deleteMusicUrl(ids)
+    deleteMusicUrl(ids)
 }
 
 /**
  * 清空歌曲url
  */
 export const musicUrlClear = () => {
-  clearMusicUrl()
+    clearMusicUrl()
 }
 
 /**
  * 统计歌曲url数量
  */
 export const musicUrlCount = () => {
-  return countMusicUrl()
+    return countMusicUrl()
 }
 

@@ -1,3 +1,3 @@
 export * as sync from './sync'
-export { DislikeManage } from './manage'
+export {DislikeManage} from './manage'
 

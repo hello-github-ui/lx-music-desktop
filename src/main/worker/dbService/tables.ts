@@ -102,17 +102,17 @@
 // ]
 
 type Tables = 'db_info'
-| 'my_list'
-| 'my_list_music_info'
-| 'index_my_list_music_info'
-| 'my_list_music_info_order'
-| 'index_my_list_music_info_order'
-| 'music_info_other_source'
-| 'index_music_info_other_source'
-| 'lyric'
-| 'music_url'
-| 'download_list'
-| 'dislike_list'
+    | 'my_list'
+    | 'my_list_music_info'
+    | 'index_my_list_music_info'
+    | 'my_list_music_info_order'
+    | 'index_my_list_music_info_order'
+    | 'music_info_other_source'
+    | 'index_music_info_other_source'
+    | 'lyric'
+    | 'music_url'
+    | 'download_list'
+    | 'dislike_list'
 
 const tables = new Map<Tables, string>()
 

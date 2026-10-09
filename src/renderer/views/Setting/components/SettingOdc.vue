@@ -1,5 +1,5 @@
 <template lang="pug">
-dt#odc {{ $t('setting__odc') }}
+    dt#odc {{ $t('setting__odc') }}
 dd
   .gap-top
     base-checkbox(id="setting_odc_isAutoClearSearchInput" :model-value="appSetting['odc.isAutoClearSearchInput']" :label="$t('setting__odc_clear_search_input')" @update:model-value="updateSetting({'odc.isAutoClearSearchInput': $event})")
@@ -9,15 +9,15 @@ dd
 
 <script>
 // import { ref, onBeforeUnmount } from '@common/utils/vueTools'
-import { appSetting, updateSetting } from '@renderer/store/setting'
+import {appSetting, updateSetting} from '@renderer/store/setting'
 
 export default {
-  name: 'SettingOdc',
-  setup() {
-    return {
-      appSetting,
-      updateSetting,
-    }
-  },
+    name: 'SettingOdc',
+    setup() {
+        return {
+            appSetting,
+            updateSetting,
+        }
+    },
 }
 </script>

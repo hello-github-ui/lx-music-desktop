@@ -1,10 +1,10 @@
-import { createMainWorker, createDownloadWorker } from './utils'
+import {createDownloadWorker, createMainWorker} from './utils'
 
 
 export default () => {
-  return {
-    main: createMainWorker(),
-    download: createDownloadWorker(),
-  }
+    return {
+        main: createMainWorker(),
+        download: createDownloadWorker(),
+    }
 }
 

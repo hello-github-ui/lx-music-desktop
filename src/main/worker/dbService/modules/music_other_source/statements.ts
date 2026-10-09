@@ -1,4 +1,4 @@
-import { getDB } from '../../db'
+import {getDB} from '../../db'
 
 
 /**
@@ -6,8 +6,8 @@ import { getDB } from '../../db'
  * @returns 查询语句
  */
 export const createMusicInfoQueryStatement = () => {
-  const db = getDB()
-  return db.prepare<[string]>(`
+    const db = getDB()
+    return db.prepare<[string]>(`
     SELECT "id", "name", "singer", "source", "meta"
     FROM "main"."music_info_other_source"
     WHERE source_id=?
@@ -20,8 +20,8 @@ export const createMusicInfoQueryStatement = () => {
  * @returns 插入语句
  */
 export const createMusicInfoInsertStatement = () => {
-  const db = getDB()
-  return db.prepare<[LX.DBService.MusicInfoOtherSource]>(`
+    const db = getDB()
+    return db.prepare<[LX.DBService.MusicInfoOtherSource]>(`
     INSERT INTO "main"."music_info_other_source" ("id", "name", "singer", "source", "meta", "source_id", "order")
     VALUES (@id, @name, @singer, @source, @meta, @source_id, @order)
   `)
@@ -32,8 +32,8 @@ export const createMusicInfoInsertStatement = () => {
  * @returns 清空语句
  */
 export const createMusicInfoClearStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>(`
+    const db = getDB()
+    return db.prepare<[]>(`
     DELETE FROM "main"."music_info_other_source"
   `)
 }
@@ -43,8 +43,8 @@ export const createMusicInfoClearStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoDeleteStatement = () => {
-  const db = getDB()
-  return db.prepare<[string]>(`
+    const db = getDB()
+    return db.prepare<[string]>(`
     DELETE FROM "main"."music_info_other_source"
     WHERE "source_id"=?
   `)
@@ -55,6 +55,6 @@ export const createMusicInfoDeleteStatement = () => {
  * @returns 统计语句
  */
 export const createCountStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>('SELECT COUNT(*) as count FROM "main"."music_info_other_source"')
+    const db = getDB()
+    return db.prepare<[]>('SELECT COUNT(*) as count FROM "main"."music_info_other_source"')
 }

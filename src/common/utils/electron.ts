@@ -1,4 +1,4 @@
-import { shell, clipboard } from 'electron'
+import {clipboard, shell} from 'electron'
 
 
 /**
@@ -6,7 +6,7 @@ import { shell, clipboard } from 'electron'
  * @param {string} dir
  */
 export const openDirInExplorer = (dir: string) => {
-  shell.showItemInFolder(dir)
+    shell.showItemInFolder(dir)
 }
 
 
@@ -14,9 +14,9 @@ export const openDirInExplorer = (dir: string) => {
  * 在浏览器打开URL
  * @param {*} url
  */
-export const openUrl = async(url: string) => {
-  if (!/^https?:\/\//.test(url)) return
-  await shell.openExternal(url)
+export const openUrl = async (url: string) => {
+    if (!/^https?:\/\//.test(url)) return
+    await shell.openExternal(url)
 }
 
 
@@ -25,7 +25,7 @@ export const openUrl = async(url: string) => {
  * @param str
  */
 export const clipboardWriteText = (str: string) => {
-  clipboard.writeText(str)
+    clipboard.writeText(str)
 }
 
 /**
@@ -33,12 +33,12 @@ export const clipboardWriteText = (str: string) => {
  * @returns
  */
 export const clipboardReadText = (): string => {
-  return clipboard.readText()
+    return clipboard.readText()
 }
 
 
 export const encodePath = (path: string) => {
-  // https://github.com/lyswhut/lx-music-desktop/issues/963
-  // https://github.com/lyswhut/lx-music-desktop/issues/1461
-  return path.replaceAll('%', '%25').replaceAll('#', '%23')
+    // https://github.com/lyswhut/lx-music-desktop/issues/963
+    // https://github.com/lyswhut/lx-music-desktop/issues/1461
+    return path.replaceAll('%', '%25').replaceAll('#', '%23')
 }

@@ -11,166 +11,166 @@ import Event from './Event'
 // }
 
 export class AppEvent extends Event {
-  configUpdate(setting: Partial<LX.AppSetting>) {
-    this.emit('configUpdate', setting)
-  }
+    configUpdate(setting: Partial<LX.AppSetting>) {
+        this.emit('configUpdate', setting)
+    }
 
-  focus() {
-    this.emit('focus')
-  }
+    focus() {
+        this.emit('focus')
+    }
 
-  dragStart() {
-    this.emit('dragStart')
-  }
+    dragStart() {
+        this.emit('dragStart')
+    }
 
-  dragEnd() {
-    this.emit('dragEnd')
-  }
+    dragEnd() {
+        this.emit('dragEnd')
+    }
 
-  /**
-   * 音乐信息切换
-   */
-  musicToggled() {
-    this.emit('musicToggled')
-  }
+    /**
+     * 音乐信息切换
+     */
+    musicToggled() {
+        this.emit('musicToggled')
+    }
 
-  /**
-   * 手动改变进度
-   * @param progress 进度
-   */
-  setProgress(progress: number, maxPlayTime?: number) {
-    this.emit('setProgress', progress, maxPlayTime)
-  }
+    /**
+     * 手动改变进度
+     * @param progress 进度
+     */
+    setProgress(progress: number, maxPlayTime?: number) {
+        this.emit('setProgress', progress, maxPlayTime)
+    }
 
-  /**
-   * 设置音量大小
-   * @param volume 音量大小
-   */
-  setVolume(volume: number) {
-    this.emit('setVolume', volume)
-  }
+    /**
+     * 设置音量大小
+     * @param volume 音量大小
+     */
+    setVolume(volume: number) {
+        this.emit('setVolume', volume)
+    }
 
-  /**
-   * 设置播放速率大小
-   * @param rate 播放速率
-   */
-  setPlaybackRate(rate: number) {
-    this.emit('setPlaybackRate', rate)
-  }
+    /**
+     * 设置播放速率大小
+     * @param rate 播放速率
+     */
+    setPlaybackRate(rate: number) {
+        this.emit('setPlaybackRate', rate)
+    }
 
-  /**
-   * 设置是否静音
-   * @param isMute 是否静音
-   */
-  setVolumeIsMute(isMute: boolean) {
-    this.emit('setVolumeIsMute', isMute)
-  }
+    /**
+     * 设置是否静音
+     * @param isMute 是否静音
+     */
+    setVolumeIsMute(isMute: boolean) {
+        this.emit('setVolumeIsMute', isMute)
+    }
 
-  // 播放器事件
-  play() {
-    this.emit('play')
-  }
+    // 播放器事件
+    play() {
+        this.emit('play')
+    }
 
-  pause() {
-    this.emit('pause')
-  }
+    pause() {
+        this.emit('pause')
+    }
 
-  stop() {
-    this.emit('stop')
-  }
+    stop() {
+        this.emit('stop')
+    }
 
-  error(code?: number) {
-    this.emit('error', code)
-  }
+    error(code?: number) {
+        this.emit('error', code)
+    }
 
-  // 播放器原始事件
-  playerPlaying() {
-    this.emit('playerPlaying')
-  }
+    // 播放器原始事件
+    playerPlaying() {
+        this.emit('playerPlaying')
+    }
 
-  playerPause() {
-    this.emit('playerPause')
-  }
+    playerPause() {
+        this.emit('playerPause')
+    }
 
-  playerStop() {
-    this.emit('playerStop')
-  }
+    playerStop() {
+        this.emit('playerStop')
+    }
 
-  playerEnded() {
-    this.emit('playerEnded')
-  }
+    playerEnded() {
+        this.emit('playerEnded')
+    }
 
-  playerError(code?: number) {
-    this.emit('playerError', code)
-  }
+    playerError(code?: number) {
+        this.emit('playerError', code)
+    }
 
-  playerLoadeddata() {
-    this.emit('playerLoadeddata')
-  }
+    playerLoadeddata() {
+        this.emit('playerLoadeddata')
+    }
 
-  playerLoadstart() {
-    this.emit('playerLoadstart')
-  }
+    playerLoadstart() {
+        this.emit('playerLoadstart')
+    }
 
-  playerCanplay() {
-    this.emit('playerCanplay')
-  }
+    playerCanplay() {
+        this.emit('playerCanplay')
+    }
 
-  playerEmptied() {
-    this.emit('playerEmptied')
-  }
+    playerEmptied() {
+        this.emit('playerEmptied')
+    }
 
-  playerWaiting() {
-    this.emit('playerWaiting')
-  }
+    playerWaiting() {
+        this.emit('playerWaiting')
+    }
 
-  playerDeviceChanged() {
-    this.emit('playerDeviceChanged')
-  }
+    playerDeviceChanged() {
+        this.emit('playerDeviceChanged')
+    }
 
-  // 激活进度条动画事件
-  activePlayProgressTransition() {
-    this.emit('activePlayProgressTransition')
-  }
+    // 激活进度条动画事件
+    activePlayProgressTransition() {
+        this.emit('activePlayProgressTransition')
+    }
 
-  // 更新图片事件
-  picUpdated() {
-    this.emit('picUpdated')
-  }
+    // 更新图片事件
+    picUpdated() {
+        this.emit('picUpdated')
+    }
 
-  // 更新歌词事件
-  lyricUpdated() {
-    this.emit('lyricUpdated')
-  }
+    // 更新歌词事件
+    lyricUpdated() {
+        this.emit('lyricUpdated')
+    }
 
-  // 更新歌词偏移
-  lyricOffsetUpdate() {
-    this.emit('lyricOffsetUpdate')
-  }
+    // 更新歌词偏移
+    lyricOffsetUpdate() {
+        this.emit('lyricOffsetUpdate')
+    }
 
-  // 歌词行播放
-  lyricLinePlay(text: string, line: number) {
-    this.emit('lyricLinePlay', text, line)
-  }
+    // 歌词行播放
+    lyricLinePlay(text: string, line: number) {
+        this.emit('lyricLinePlay', text, line)
+    }
 
-  // 我的列表改变事件
-  myListUpdate(ids: string[]) {
-    this.emit('myListUpdate', ids)
-  }
+    // 我的列表改变事件
+    myListUpdate(ids: string[]) {
+        this.emit('myListUpdate', ids)
+    }
 
-  // 下载列表改变事件
-  downloadListUpdate() {
-    this.emit('downloadListUpdate')
-  }
+    // 下载列表改变事件
+    downloadListUpdate() {
+        this.emit('downloadListUpdate')
+    }
 
-  // 列表里的音乐信息改变事件
-  // musicInfoUpdate(musicInfo: LX.Music.MusicInfo) {
-  //   this.emit('musicInfoUpdate', musicInfo)
-  // }
+    // 列表里的音乐信息改变事件
+    // musicInfoUpdate(musicInfo: LX.Music.MusicInfo) {
+    //   this.emit('musicInfoUpdate', musicInfo)
+    // }
 
-  keyDown(event: LX.KeyDownEevent) {
-    this.emit('keyDown', event)
-  }
+    keyDown(event: LX.KeyDownEevent) {
+        this.emit('keyDown', event)
+    }
 }
 
 
@@ -178,11 +178,12 @@ type EventMethods = Omit<EventType, keyof Event>
 
 
 declare class EventType extends AppEvent {
-  on<K extends keyof EventMethods>(event: K, listener: EventMethods[K]): any
-  off<K extends keyof EventMethods>(event: K, listener: EventMethods[K]): any
+    on<K extends keyof EventMethods>(event: K, listener: EventMethods[K]): any
+
+    off<K extends keyof EventMethods>(event: K, listener: EventMethods[K]): any
 }
 
 export type AppEventTypes = Omit<EventType, keyof Omit<Event, 'on' | 'off'>>
 export const createAppEventHub = (): AppEventTypes => {
-  return new AppEvent()
+    return new AppEvent()
 }

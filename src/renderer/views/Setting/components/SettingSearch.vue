@@ -1,5 +1,5 @@
 <template lang="pug">
-dt#search {{ $t('setting__search') }}
+    dt#search {{ $t('setting__search') }}
 dd
   .gap-top
     base-checkbox(id="setting_search_showHot_enable" :model-value="appSetting['search.isShowHotSearch']" :label="$t('setting__search_hot')" @update:model-value="updateSetting({'search.isShowHotSearch': $event})")
@@ -12,15 +12,15 @@ dd
 
 <script>
 // import { ref, onBeforeUnmount } from '@common/utils/vueTools'
-import { appSetting, updateSetting } from '@renderer/store/setting'
+import {appSetting, updateSetting} from '@renderer/store/setting'
 
 export default {
-  name: 'SettingSearch',
-  setup() {
-    return {
-      appSetting,
-      updateSetting,
-    }
-  },
+    name: 'SettingSearch',
+    setup() {
+        return {
+            appSetting,
+            updateSetting,
+        }
+    },
 }
 </script>

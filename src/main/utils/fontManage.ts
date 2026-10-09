@@ -3,7 +3,7 @@
 
 // exports.getAvailableFontFamilies = getAvailableFontFamilies
 
-import { getFonts } from 'font-list'
+import {getFonts} from 'font-list'
 // import { getAvailableFontFamilies } from 'electron-font-manager'
 
 
@@ -17,5 +17,5 @@ import { getFonts } from 'font-list'
 // }
 
 export {
-  getFonts,
+    getFonts,
 }

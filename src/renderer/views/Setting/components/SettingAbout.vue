@@ -1,5 +1,5 @@
 <template lang="pug">
-dt#about {{ $t('setting__about') }}
+    dt#about {{ $t('setting__about') }}
 dd
   .p.small
     | 本软件完全免费，代码已开源。开源地址：
@@ -43,20 +43,20 @@ dd
 
 <script>
 // import { ref, onBeforeUnmount } from '@common/utils/vueTools'
-import { isShowPact } from '@renderer/store'
-import { openUrl, clipboardWriteText } from '@common/utils/electron'
+import {isShowPact} from '@renderer/store'
+import {clipboardWriteText, openUrl} from '@common/utils/electron'
 
 export default {
-  name: 'SettingAbout',
-  setup() {
-    const handleShowPact = () => {
-      isShowPact.value = true
-    }
-    return {
-      openUrl,
-      clipboardWriteText,
-      handleShowPact,
-    }
-  },
+    name: 'SettingAbout',
+    setup() {
+        const handleShowPact = () => {
+            isShowPact.value = true
+        }
+        return {
+            openUrl,
+            clipboardWriteText,
+            handleShowPact,
+        }
+    },
 }
 </script>

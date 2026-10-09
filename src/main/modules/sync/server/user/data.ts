@@ -1,65 +1,67 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { randomBytes } from 'node:crypto'
-import { throttle } from '@common/utils/common'
-import { filterFileName, toMD5 } from '../utils'
-import { File } from '@common/constants_sync'
-import { exists } from '../../utils'
+import {randomBytes} from 'node:crypto'
+import {throttle} from '@common/utils/common'
+import {filterFileName, toMD5} from '../utils'
+import {File} from '@common/constants_sync'
+import {exists} from '../../utils'
 
 
 interface ServerInfo {
-  serverId: string
-  version: number
+    serverId: string
+    version: number
 }
+
 interface DevicesInfo {
-  userName: string
-  clients: Record<string, LX.Sync.ServerKeyInfo>
+    userName: string
+    clients: Record<string, LX.Sync.ServerKeyInfo>
 }
+
 const saveServerInfoThrottle = throttle(() => {
-  fs.writeFile(path.join(global.lxDataPath, File.serverDataPath, File.serverInfoJSON), JSON.stringify(serverInfo), (err) => {
-    if (err) console.error(err)
-  })
+    fs.writeFile(path.join(global.lxDataPath, File.serverDataPath, File.serverInfoJSON), JSON.stringify(serverInfo), (err) => {
+        if (err) console.error(err)
+    })
 })
 let serverInfo: ServerInfo
-export const initServerInfo = async() => {
-  if (serverInfo != null) return
-  const serverInfoFilePath = path.join(global.lxDataPath, File.serverDataPath, File.serverInfoJSON)
-  if (await exists(serverInfoFilePath)) {
-    // eslint-disable-next-line require-atomic-updates
-    serverInfo = JSON.parse((await fs.promises.readFile(serverInfoFilePath)).toString())
-  } else {
-    // eslint-disable-next-line require-atomic-updates
-    serverInfo = {
-      serverId: randomBytes(4 * 4).toString('base64'),
-      version: 2,
+export const initServerInfo = async () => {
+    if (serverInfo != null) return
+    const serverInfoFilePath = path.join(global.lxDataPath, File.serverDataPath, File.serverInfoJSON)
+    if (await exists(serverInfoFilePath)) {
+        // eslint-disable-next-line require-atomic-updates
+        serverInfo = JSON.parse((await fs.promises.readFile(serverInfoFilePath)).toString())
+    } else {
+        // eslint-disable-next-line require-atomic-updates
+        serverInfo = {
+            serverId: randomBytes(4 * 4).toString('base64'),
+            version: 2,
+        }
+        const syncDataPath = path.join(global.lxDataPath, File.serverDataPath)
+        if (!await exists(syncDataPath)) {
+            await fs.promises.mkdir(syncDataPath, {recursive: true})
+        }
+        saveServerInfoThrottle()
     }
-    const syncDataPath = path.join(global.lxDataPath, File.serverDataPath)
-    if (!await exists(syncDataPath)) {
-      await fs.promises.mkdir(syncDataPath, { recursive: true })
-    }
-    saveServerInfoThrottle()
-  }
 }
 export const getServerId = () => {
-  return serverInfo.serverId
+    return serverInfo.serverId
 }
-export const getVersion = async() => {
-  await initServerInfo()
-  return serverInfo.version ?? 1
+export const getVersion = async () => {
+    await initServerInfo()
+    return serverInfo.version ?? 1
 }
-export const setVersion = async(version: number) => {
-  await initServerInfo()
-  serverInfo.version = version
-  saveServerInfoThrottle()
+export const setVersion = async (version: number) => {
+    await initServerInfo()
+    serverInfo.version = version
+    saveServerInfoThrottle()
 }
 
 export const getUserDirname = (userName: string) => `${filterFileName(userName)}_${toMD5(userName).substring(0, 6)}`
 
 export const getUserConfig = (userName: string) => {
-  return {
-    maxSnapshotNum: global.lx.appSetting['sync.server.maxSsnapshotNum'],
-    'list.addMusicLocationType': global.lx.appSetting['list.addMusicLocationType'],
-  }
+    return {
+        maxSnapshotNum: global.lx.appSetting['sync.server.maxSsnapshotNum'],
+        'list.addMusicLocationType': global.lx.appSetting['list.addMusicLocationType'],
+    }
 }
 
 
@@ -90,62 +92,66 @@ export const getUserConfig = (userName: string) => {
 // }
 
 export const createClientKeyInfo = (deviceName: string, isMobile: boolean): LX.Sync.ServerKeyInfo => {
-  const keyInfo: LX.Sync.ServerKeyInfo = {
-    clientId: randomBytes(4 * 4).toString('base64'),
-    key: randomBytes(16).toString('base64'),
-    deviceName,
-    isMobile,
-    lastConnectDate: 0,
-  }
-  return keyInfo
+    const keyInfo: LX.Sync.ServerKeyInfo = {
+        clientId: randomBytes(4 * 4).toString('base64'),
+        key: randomBytes(16).toString('base64'),
+        deviceName,
+        isMobile,
+        lastConnectDate: 0,
+    }
+    return keyInfo
 }
 
 export class UserDataManage {
-  userName: string
-  userDir: string
-  devicesFilePath: string
-  devicesInfo: DevicesInfo
-  private readonly saveDevicesInfoThrottle: () => void
+    userName: string
+    userDir: string
+    devicesFilePath: string
+    devicesInfo: DevicesInfo
+    private readonly saveDevicesInfoThrottle: () => void
 
-  getAllClientKeyInfo = () => {
-    return Object.values(this.devicesInfo.clients).sort((a, b) => (b.lastConnectDate ?? 0) - (a.lastConnectDate ?? 0))
-  }
+    constructor(userName: string) {
+        this.userName = userName
+        const syncDataPath = path.join(global.lxDataPath, File.serverDataPath)
+        this.userDir = syncDataPath
+        this.devicesFilePath = path.join(this.userDir, File.userDevicesJSON)
+        this.devicesInfo = fs.existsSync(this.devicesFilePath) ? JSON.parse(fs.readFileSync(this.devicesFilePath).toString()) : {
+            userName,
+            clients: {}
+        }
 
-  saveClientKeyInfo = (keyInfo: LX.Sync.ServerKeyInfo) => {
-    if (this.devicesInfo.clients[keyInfo.clientId] == null && Object.keys(this.devicesInfo.clients).length > 101) throw new Error('max keys')
-    this.devicesInfo.clients[keyInfo.clientId] = keyInfo
-    this.saveDevicesInfoThrottle()
-  }
+        this.saveDevicesInfoThrottle = throttle(() => {
+            fs.writeFile(this.devicesFilePath, JSON.stringify(this.devicesInfo), 'utf8', (err) => {
+                if (err) console.error(err)
+            })
+        })
+    }
 
-  getClientKeyInfo = (clientId?: string | null): LX.Sync.ServerKeyInfo | null => {
-    if (!clientId) return null
-    return this.devicesInfo.clients[clientId] ?? null
-  }
+    getAllClientKeyInfo = () => {
+        return Object.values(this.devicesInfo.clients).sort((a, b) => (b.lastConnectDate ?? 0) - (a.lastConnectDate ?? 0))
+    }
 
-  removeClientKeyInfo = async(clientId: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete this.devicesInfo.clients[clientId]
-    this.saveDevicesInfoThrottle()
-  }
+    saveClientKeyInfo = (keyInfo: LX.Sync.ServerKeyInfo) => {
+        if (this.devicesInfo.clients[keyInfo.clientId] == null && Object.keys(this.devicesInfo.clients).length > 101) throw new Error('max keys')
+        this.devicesInfo.clients[keyInfo.clientId] = keyInfo
+        this.saveDevicesInfoThrottle()
+    }
 
-  isIncluedsClient = (clientId: string) => {
-    return Object.values(this.devicesInfo.clients).some(client => client.clientId == clientId)
-  }
+    getClientKeyInfo = (clientId?: string | null): LX.Sync.ServerKeyInfo | null => {
+        if (!clientId) return null
+        return this.devicesInfo.clients[clientId] ?? null
+    }
 
-  constructor(userName: string) {
-    this.userName = userName
-    const syncDataPath = path.join(global.lxDataPath, File.serverDataPath)
-    this.userDir = syncDataPath
-    this.devicesFilePath = path.join(this.userDir, File.userDevicesJSON)
-    this.devicesInfo = fs.existsSync(this.devicesFilePath) ? JSON.parse(fs.readFileSync(this.devicesFilePath).toString()) : { userName, clients: {} }
+    removeClientKeyInfo = async (clientId: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete this.devicesInfo.clients[clientId]
+        this.saveDevicesInfoThrottle()
+    }
 
-    this.saveDevicesInfoThrottle = throttle(() => {
-      fs.writeFile(this.devicesFilePath, JSON.stringify(this.devicesInfo), 'utf8', (err) => {
-        if (err) console.error(err)
-      })
-    })
-  }
+    isIncluedsClient = (clientId: string) => {
+        return Object.values(this.devicesInfo.clients).some(client => client.clientId == clientId)
+    }
 }
+
 // type UserDataManages = Map<string, UserDataManage>
 
 // export const createUserDataManage = (user: LX.UserConfig) => {

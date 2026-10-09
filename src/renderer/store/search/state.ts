@@ -1,4 +1,4 @@
-import { ref, shallowReactive } from '@common/utils/vueTools'
+import {ref, shallowReactive} from '@common/utils/vueTools'
 
 
 export const searchText = ref('')

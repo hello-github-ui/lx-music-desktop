@@ -1,7 +1,7 @@
-import { type I18n } from '@root/lang'
+import {type I18n} from '@root/lang'
 
 declare module 'vue' {
-  interface ComponentCustomProperties {
-    $t: I18n['t']
-  }
+    interface ComponentCustomProperties {
+        $t: I18n['t']
+    }
 }

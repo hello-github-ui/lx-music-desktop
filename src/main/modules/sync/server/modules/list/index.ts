@@ -1,3 +1,3 @@
 export * as sync from './sync'
-export { ListManage } from './manage'
+export {ListManage} from './manage'
 

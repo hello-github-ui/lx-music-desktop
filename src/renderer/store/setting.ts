@@ -1,28 +1,28 @@
-import { reactive, computed } from '@common/utils/vueTools'
+import {computed, reactive} from '@common/utils/vueTools'
 import defaultSetting from '@common/defaultSetting'
-import { updateSetting as saveSetting } from '@renderer/utils/ipc'
+import {updateSetting as saveSetting} from '@renderer/utils/ipc'
 
-export const appSetting = window.lxData.appSetting = reactive<LX.AppSetting>({ ...defaultSetting })
+export const appSetting = window.lxData.appSetting = reactive<LX.AppSetting>({...defaultSetting})
 
 export const isShowAnimation = computed(() => {
-  return appSetting['common.isShowAnimation']
+    return appSetting['common.isShowAnimation']
 })
 
 
 export const initSetting = (newSetting: LX.AppSetting) => {
-  mergeSetting(newSetting)
+    mergeSetting(newSetting)
 }
 
 export const mergeSetting = (newSetting: Partial<LX.AppSetting>) => {
-  for (const [key, value] of Object.entries(newSetting)) {
-    // @ts-expect-error
-    appSetting[key] = value
-  }
+    for (const [key, value] of Object.entries(newSetting)) {
+        // @ts-expect-error
+        appSetting[key] = value
+    }
 }
 
 export const updateSetting = window.lxData.updateSetting = (setting: Partial<LX.AppSetting>) => {
-  // console.warn(setting)
-  void saveSetting(setting)
+    // console.warn(setting)
+    void saveSetting(setting)
 }
 
 /**
@@ -30,7 +30,7 @@ export const updateSetting = window.lxData.updateSetting = (setting: Partial<LX.
  * @param isAgreePact 是否同意协议
  */
 export const saveAgreePact = (isAgreePact: boolean) => {
-  updateSetting({ 'common.isAgreePact': isAgreePact })
+    updateSetting({'common.isAgreePact': isAgreePact})
 }
 
 /**
@@ -38,7 +38,7 @@ export const saveAgreePact = (isAgreePact: boolean) => {
  * @param id 媒体驱动id
  */
 export const saveMediaDeviceId = (id: string) => {
-  updateSetting({ 'player.mediaDeviceId': id })
+    updateSetting({'player.mediaDeviceId': id})
 }
 
 /**
@@ -46,7 +46,7 @@ export const saveMediaDeviceId = (id: string) => {
  * @param volume 音量
  */
 export const saveVolume = (volume: number) => {
-  updateSetting({ 'player.volume': volume })
+    updateSetting({'player.volume': volume})
 }
 
 /**
@@ -54,7 +54,7 @@ export const saveVolume = (volume: number) => {
  * @param isMute 是否静音
  */
 export const saveVolumeIsMute = (isMute: boolean) => {
-  updateSetting({ 'player.isMute': isMute })
+    updateSetting({'player.isMute': isMute})
 }
 
 /**
@@ -62,7 +62,7 @@ export const saveVolumeIsMute = (isMute: boolean) => {
  * @param rate 播放速率
  */
 export const savePlaybackRate = (rate: number) => {
-  updateSetting({ 'player.playbackRate': rate })
+    updateSetting({'player.playbackRate': rate})
 }
 
 
@@ -71,7 +71,7 @@ export const savePlaybackRate = (rate: number) => {
  * @param enabled
  */
 export const setVisibleDesktopLyric = (enabled: boolean) => {
-  updateSetting({ 'desktopLyric.enable': enabled })
+    updateSetting({'desktopLyric.enable': enabled})
 }
 
 /**
@@ -79,7 +79,7 @@ export const setVisibleDesktopLyric = (enabled: boolean) => {
  * @param isLock
  */
 export const setLockDesktopLyric = (isLock: boolean) => {
-  updateSetting({ 'desktopLyric.isLock': isLock })
+    updateSetting({'desktopLyric.isLock': isLock})
 }
 
 /**
@@ -87,7 +87,7 @@ export const setLockDesktopLyric = (isLock: boolean) => {
  * @param mode
  */
 export const setTogglePlayMode = (mode: LX.AppSetting['player.togglePlayMethod']) => {
-  updateSetting({ 'player.togglePlayMethod': mode })
+    updateSetting({'player.togglePlayMethod': mode})
 }
 
 /**
@@ -95,7 +95,7 @@ export const setTogglePlayMode = (mode: LX.AppSetting['player.togglePlayMethod']
  * @param sourceId
  */
 export const setApiSource = (sourceId: string) => {
-  updateSetting({ 'common.apiSource': sourceId })
+    updateSetting({'common.apiSource': sourceId})
 }
 
 /**
@@ -103,7 +103,7 @@ export const setApiSource = (sourceId: string) => {
  * @param size 字体大小
  */
 export const setPlayDetailLyricFont = (size: number) => {
-  updateSetting({ 'playDetail.style.fontSize': size })
+    updateSetting({'playDetail.style.fontSize': size})
 }
 
 /**
@@ -111,7 +111,7 @@ export const setPlayDetailLyricFont = (size: number) => {
  * @param align 对齐方式
  */
 export const setPlayDetailLyricAlign = (align: LX.AppSetting['playDetail.style.align']) => {
-  updateSetting({ 'playDetail.style.align': align })
+    updateSetting({'playDetail.style.align': align})
 }
 
 /**
@@ -119,5 +119,5 @@ export const setPlayDetailLyricAlign = (align: LX.AppSetting['playDetail.style.a
  * @param enable 是否启用
  */
 export const setEnableAudioVisualization = (enable: boolean) => {
-  updateSetting({ 'player.audioVisualization': enable })
+    updateSetting({'player.audioVisualization': enable})
 }

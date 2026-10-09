@@ -8,13 +8,13 @@ import registerCommonRenderers from './commonRenderers'
 
 let isRegistered = false
 export default () => {
-  if (isRegistered) return
-  registerUserApi()
-  registerCommonRenderers()
-  registerWinMain()
-  registerHotKey()
-  registerTray()
-  registerAppMenu()
-  registerWinLyric()
-  isRegistered = true
+    if (isRegistered) return
+    registerUserApi()
+    registerCommonRenderers()
+    registerWinMain()
+    registerHotKey()
+    registerTray()
+    registerAppMenu()
+    registerWinLyric()
+    isRegistered = true
 }

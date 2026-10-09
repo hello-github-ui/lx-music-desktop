@@ -1,22 +1,22 @@
-import { type I18n } from '@lyric/plugins/i18n'
+import {type I18n} from '@lyric/plugins/i18n'
 
 declare global {
-  interface Window {
-    ELECTRON_DISABLE_SECURITY_WARNINGS?: string
+    interface Window {
+        ELECTRON_DISABLE_SECURITY_WARNINGS?: string
 
-    i18n: I18n
+        i18n: I18n
 
-    lxData: any
+        lxData: any
 
-    setTheme: (colors: Record<string, string>) => void
-    setLang: (lang?: string) => void
-    setLyricColor: (colors: Record<string, string>) => void
-    os: 'windows' | 'linux' | 'mac'
-  }
+        setTheme: (colors: Record<string, string>) => void
+        setLang: (lang?: string) => void
+        setLyricColor: (colors: Record<string, string>) => void
+        os: 'windows' | 'linux' | 'mac'
+    }
 
-  namespace LX {
+    namespace LX {
 
-  }
+    }
 
 }
 

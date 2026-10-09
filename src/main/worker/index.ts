@@ -1,9 +1,9 @@
-import { createDBServiceWorker } from './utils'
+import {createDBServiceWorker} from './utils'
 
 
 export default () => {
-  return {
-    dbService: createDBServiceWorker(),
-  }
+    return {
+        dbService: createDBServiceWorker(),
+    }
 }
 

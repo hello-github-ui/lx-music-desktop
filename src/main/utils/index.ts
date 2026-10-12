@@ -203,7 +203,7 @@ export const saveAppHotKeyConfig = (config: LX.HotKeyConfigAll) => {
 
 export const openDevTools = (webContents: Electron.WebContents) => {
     webContents.openDevTools({
-        mode: 'undocked',
+        mode: 'bottom',
     })
 }
 

@@ -19,7 +19,7 @@ const CRX_URL = `https://clients2.google.com/service/update2/crx?response=redire
 const OUT_DIR = path.join(__dirname, 'lib', 'vue-devtools')
 
 // 解析命令行参数
-let proxyUrl = 'http://127.0.0.1:10809' // 默认 HTTP 代理端口
+let proxyUrl = 'http://127.0.0.1:10808' // 默认 HTTP 代理端口
 const proxyIdx = process.argv.indexOf('--proxy')
 if (proxyIdx !== -1 && process.argv[proxyIdx + 1]) {
     proxyUrl = process.argv[proxyIdx + 1]

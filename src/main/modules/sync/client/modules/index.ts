@@ -4,17 +4,17 @@ import * as dislike from './dislike'
 
 
 export const callObj = Object.assign({},
-  list.handler,
-  dislike.handler,
+    list.handler,
+    dislike.handler,
 )
 
 
 export const modules = {
-  list,
-  dislike,
+    list,
+    dislike,
 }
 
 export const featureVersion = {
-  list: 1,
-  dislike: 1,
+    list: 1,
+    dislike: 1,
 } as const

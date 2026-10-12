@@ -20,24 +20,24 @@ export * from './process'
 
 let isInitialized = false
 export default () => {
-  if (isInitialized) return
-  isInitialized = true
+    if (isInitialized) return
+    isInitialized = true
 
-  common(sendEvent)
-  list(sendEvent)
-  dislike(sendEvent)
-  app()
-  hotKey()
-  userApi()
-  sync()
-  data()
-  music()
-  download()
-  soundEffect()
-  openAPI()
+    common(sendEvent)
+    list(sendEvent)
+    dislike(sendEvent)
+    app()
+    hotKey()
+    userApi()
+    sync()
+    data()
+    music()
+    download()
+    soundEffect()
+    openAPI()
 
-  global.lx.event_app.on('updated_config', (keys, setting) => {
-    sendConfigChange(setting)
-  })
+    global.lx.event_app.on('updated_config', (keys, setting) => {
+        sendConfigChange(setting)
+    })
 }
 

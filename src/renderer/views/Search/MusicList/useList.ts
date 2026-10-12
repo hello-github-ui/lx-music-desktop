@@ -11,47 +11,47 @@ import { assertApiSupport } from '@renderer/store/utils'
 export type SearchSource = LX.OnlineSource | 'all'
 
 export default () => {
-  const listRef = ref<any>(null)
+    const listRef = ref<any>(null)
 
-  const listInfo = ref<ListInfo>({
-    page: 1,
-    maxPage: 0,
-    limit: 30,
-    total: 0,
-    list: [],
-    key: null,
-    noItemLabel: '',
-  })
-
-  const search = (text: string, source: SearchSource, page: number) => {
-    listInfo.value = listInfos[source] as ListInfo
-    if (text.length) void addHistoryWord(text)
-    void searchMusic(text, page, source).then((list: LX.Music.MusicInfo[]) => {
-      if (list.length) {
-        setTimeout(() => {
-          if (listRef.value) listRef.value.scrollToTop()
-        })
-      }
+    const listInfo = ref<ListInfo>({
+        page: 1,
+        maxPage: 0,
+        limit: 30,
+        total: 0,
+        list: [],
+        key: null,
+        noItemLabel: '',
     })
-  }
 
-  const handlePlayList = async(index: number) => {
-    let targetSong = listInfo.value.list[index]
+    const search = (text: string, source: SearchSource, page: number) => {
+        listInfo.value = listInfos[source] as ListInfo
+        if (text.length) void addHistoryWord(text)
+        void searchMusic(text, page, source).then((list: LX.Music.MusicInfo[]) => {
+            if (list.length) {
+                setTimeout(() => {
+                    if (listRef.value) listRef.value.scrollToTop()
+                })
+            }
+        })
+    }
 
-    if (!assertApiSupport(targetSong.source)) return
+    const handlePlayList = async(index: number) => {
+        let targetSong = listInfo.value.list[index]
 
-    const defaultListMusics = await getListMusics(LIST_IDS.DEFAULT)
+        if (!assertApiSupport(targetSong.source)) return
 
-    await addListMusics(LIST_IDS.DEFAULT, [targetSong])
+        const defaultListMusics = await getListMusics(LIST_IDS.DEFAULT)
 
-    let targetIndex = defaultListMusics.findIndex(s => s.id === targetSong.id)
-    if (targetIndex > -1) playList(LIST_IDS.DEFAULT, targetIndex)
-  }
+        await addListMusics(LIST_IDS.DEFAULT, [targetSong])
 
-  return {
-    listRef,
-    listInfo,
-    search,
-    handlePlayList,
-  }
+        let targetIndex = defaultListMusics.findIndex(s => s.id === targetSong.id)
+        if (targetIndex > -1) playList(LIST_IDS.DEFAULT, targetIndex)
+    }
+
+    return {
+        listRef,
+        listInfo,
+        search,
+        handlePlayList,
+    }
 }

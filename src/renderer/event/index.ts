@@ -4,34 +4,34 @@ import { registerKeyEvent, createKeyEventHub } from './keyEvent'
 import { createAppEventHub } from './appEvent'
 
 export const registerEvents = () => {
-  window.lx.isEditingHotKey = false
-  window.app_event = createAppEventHub()
-  window.key_event = createKeyEventHub()
+    window.lx.isEditingHotKey = false
+    window.app_event = createAppEventHub()
+    window.key_event = createKeyEventHub()
 
-  const setHotkeyConfig = ({ local, global }: LX.HotKeyConfigAll) => {
-    window.lx.appHotKeyConfig = {
-      local,
-      global,
+    const setHotkeyConfig = ({ local, global }: LX.HotKeyConfigAll) => {
+        window.lx.appHotKeyConfig = {
+            local,
+            global,
+        }
     }
-  }
 
-  void getHotKeyConfig().then(setHotkeyConfig)
+    void getHotKeyConfig().then(setHotkeyConfig)
 
-  onUpdateHotkey(({ params }) => {
-    setHotkeyConfig(params)
-  })
+    onUpdateHotkey(({ params }) => {
+        setHotkeyConfig(params)
+    })
 
-  onKeyDown(({ params: { key } }) => {
-    const keyInfo = window.lx.appHotKeyConfig.global.keys[key]
-    if (keyInfo) window.key_event.emit(keyInfo.action)
-  })
+    onKeyDown(({ params: { key } }) => {
+        const keyInfo = window.lx.appHotKeyConfig.global.keys[key]
+        if (keyInfo) window.key_event.emit(keyInfo.action)
+    })
 
-  onFocus(() => {
-    window.app_event.focus()
-  })
+    onFocus(() => {
+        window.app_event.focus()
+    })
 
-  registerKeyEvent()
-  // registerRendererEvents()
+    registerKeyEvent()
+    // registerRendererEvents()
 }
 
 // export const unregisterEvents = () => {

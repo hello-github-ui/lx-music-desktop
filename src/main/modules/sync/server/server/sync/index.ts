@@ -5,6 +5,6 @@ export { modules } from '../../modules'
 export * from './event'
 
 export const callObj = {
-  ...handler,
-  ..._callObj,
+    ...handler,
+    ..._callObj,
 }

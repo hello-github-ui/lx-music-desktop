@@ -2,9 +2,9 @@
 import { getMusicInfo } from './musicInfo'
 
 const getSongId = async(mInfo) => {
-  if (mInfo.songmid != mInfo.copyrightId) return mInfo.songmid
-  const musicInfo = await getMusicInfo(mInfo.songmid)
-  return musicInfo.songmid
+    if (mInfo.songmid != mInfo.copyrightId) return mInfo.songmid
+    const musicInfo = await getMusicInfo(mInfo.songmid)
+    return musicInfo.songmid
 }
 
 

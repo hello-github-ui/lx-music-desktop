@@ -3,8 +3,8 @@ import { type workerDownloadTypes } from '@renderer/worker/download/index'
 
 
 declare global {
-  namespace LX {
-    type WorkerMainTypes = workerMainTypes
-    type WorkerDownloadTypes = workerDownloadTypes
-  }
+    namespace LX {
+        type WorkerMainTypes = workerMainTypes
+        type WorkerDownloadTypes = workerDownloadTypes
+    }
 }

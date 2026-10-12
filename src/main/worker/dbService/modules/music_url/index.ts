@@ -1,49 +1,49 @@
 import {
-  queryMusicUrl,
-  insertMusicUrl,
-  deleteMusicUrl,
-  clearMusicUrl,
-  countMusicUrl,
+    queryMusicUrl,
+    insertMusicUrl,
+    deleteMusicUrl,
+    clearMusicUrl,
+    countMusicUrl,
 } from './dbHelper'
 
 
 /**
- * 获取歌曲url
- * @param id 歌曲id
- * @returns 歌曲url
- */
+  * 获取歌曲url
+  * @param id 歌曲id
+  * @returns 歌曲url
+  */
 export const getMusicUrl = (id: string): string | null => {
-  const url = queryMusicUrl(id)
-  return url
+    const url = queryMusicUrl(id)
+    return url
 }
 
 /**
- * 保存歌曲url
- * @param urlInfos url信息
- */
+  * 保存歌曲url
+  * @param urlInfos url信息
+  */
 export const musicUrlSave = (urlInfos: LX.Music.MusicUrlInfo[]) => {
-  insertMusicUrl(urlInfos)
+    insertMusicUrl(urlInfos)
 }
 
 /**
- * 删除歌曲url
- * @param ids 歌曲id
- */
+  * 删除歌曲url
+  * @param ids 歌曲id
+  */
 export const musicUrlRemove = (ids: string[]) => {
-  deleteMusicUrl(ids)
+    deleteMusicUrl(ids)
 }
 
 /**
- * 清空歌曲url
- */
+  * 清空歌曲url
+  */
 export const musicUrlClear = () => {
-  clearMusicUrl()
+    clearMusicUrl()
 }
 
 /**
- * 统计歌曲url数量
- */
+  * 统计歌曲url数量
+  */
 export const musicUrlCount = () => {
-  return countMusicUrl()
+    return countMusicUrl()
 }
 

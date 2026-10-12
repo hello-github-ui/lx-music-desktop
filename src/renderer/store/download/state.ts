@@ -4,7 +4,7 @@ import { DOWNLOAD_STATUS } from '@common/constants'
 export const isInitedList = ref(false)
 
 export const setInited = () => {
-  isInitedList.value = true
+    isInitedList.value = true
 }
 
 export const downloadList = reactive<LX.Download.ListItem[]>([])

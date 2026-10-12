@@ -5,22 +5,22 @@ import { useI18n } from '@renderer/plugins/i18n'
 
 
 export default () => {
-  const isShowListUpdateModal = ref(false)
+    const isShowListUpdateModal = ref(false)
 
-  const t = useI18n()
+    const t = useI18n()
 
-  const handleUpdateSourceList = (listInfo: LX.List.UserListInfo) => {
-    void dialog.confirm({
-      message: t('lists__sync_confirm_tip', { name: listInfo.name }),
-      confirmButtonText: t('lists__remove_tip_button'),
-    }).then(isSync => {
-      if (!isSync) return
-      void syncSourceList(listInfo)
-    })
-  }
+    const handleUpdateSourceList = (listInfo: LX.List.UserListInfo) => {
+        void dialog.confirm({
+            message: t('lists__sync_confirm_tip', { name: listInfo.name }),
+            confirmButtonText: t('lists__remove_tip_button'),
+        }).then(isSync => {
+            if (!isSync) return
+            void syncSourceList(listInfo)
+        })
+    }
 
-  return {
-    isShowListUpdateModal,
-    handleUpdateSourceList,
-  }
+    return {
+        isShowListUpdateModal,
+        handleUpdateSourceList,
+    }
 }

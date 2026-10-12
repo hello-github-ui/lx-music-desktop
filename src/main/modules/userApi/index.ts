@@ -7,43 +7,43 @@ let userApiId: string | null
 export const getApiList = getUserApis
 
 export const importApi = async(script: string): Promise<LX.UserApi.ImportUserApi> => {
-  return {
-    apiInfo: await handleImportApi(script),
-    apiList: getUserApis(),
-  }
+    return {
+        apiInfo: await handleImportApi(script),
+        apiList: getUserApis(),
+    }
 }
 export const removeApi = async(ids: string[]): Promise<LX.UserApi.UserApiInfo[]> => {
-  if (userApiId && ids.includes(userApiId)) {
-    userApiId = null
-    await closeWindow()
-  }
-  handleRemoveApi(ids)
-  return getUserApis()
+    if (userApiId && ids.includes(userApiId)) {
+        userApiId = null
+        await closeWindow()
+    }
+    handleRemoveApi(ids)
+    return getUserApis()
 }
 
 export const setApi = async(id: string) => {
-  if (userApiId) {
-    userApiId = null
-    await closeWindow()
-  }
-  const apiList = getUserApis()
-  if (!apiList.some(a => a.id === id)) return
-  userApiId ||= id
-  await loadApi(id)
+    if (userApiId) {
+        userApiId = null
+        await closeWindow()
+    }
+    const apiList = getUserApis()
+    if (!apiList.some(a => a.id === id)) return
+    userApiId ||= id
+    await loadApi(id)
 }
 
 export const setAllowShowUpdateAlert = (id: string, enable: boolean) => {
-  saveAllowShowUpdateAlert(id, enable)
-  setRendererEventAllowShowUpdateAlert(id, enable)
+    saveAllowShowUpdateAlert(id, enable)
+    setRendererEventAllowShowUpdateAlert(id, enable)
 }
 
 
 export * from './rendererEvent/rendererEvent'
 
 export default () => {
-  init()
+    init()
 
-  global.lx.event_app.on('main_window_close', () => {
-    void closeWindow()
-  })
+    global.lx.event_app.on('main_window_close', () => {
+        void closeWindow()
+    })
 }

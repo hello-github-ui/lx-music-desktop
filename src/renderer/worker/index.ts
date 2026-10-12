@@ -2,9 +2,9 @@ import { createMainWorker, createDownloadWorker } from './utils'
 
 
 export default () => {
-  return {
-    main: createMainWorker(),
-    download: createDownloadWorker(),
-  }
+    return {
+        main: createMainWorker(),
+        download: createDownloadWorker(),
+    }
 }
 

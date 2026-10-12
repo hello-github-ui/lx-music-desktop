@@ -25,36 +25,36 @@ const { beforePack, copyLib } = require('./deps')
 // }
 
 const archMap = {
-  [Arch.x64]: 'x64',
-  [Arch.ia32]: 'ia32',
-  [Arch.arm64]: 'arm64',
-  [Arch.armv7l]: 'arm',
+    [Arch.x64]: 'x64',
+    [Arch.ia32]: 'ia32',
+    [Arch.arm64]: 'arm64',
+    [Arch.armv7l]: 'arm',
 }
 module.exports = async(context) => {
-  await beforePack()
-  const { arch } = context
-  const electronVersion = context.packager?.info?._framework?.version ?? require('../package.json').devDependencies.electron.replace(/^[^\d]*?(\d+)/, '$1')
-  await copyLib(archMap[arch], parseInt(electronVersion) == 22)
-  // const electronNodeAbi = nodeAbi.getAbi(electronVersion, 'electron')
-  // if (electronPlatformName !== 'linux' || process.env.FORCE) return
-  // // const bindingFilePath = path.join(__dirname, '../node_modules/better-sqlite3/binding.gyp')
-  // // const bindingBakFilePath = path.join(__dirname, '../node_modules/better-sqlite3/binding.gyp.bak')
-  // switch (arch) {
-  //   case Arch.x64:
-  //   case Arch.arm64:
-  //   case Arch.armv7l:
-  //     // if (fs.existsSync(bindingFilePath)) {
-  //     //   // console.log('rename binding file...')
-  //     //   await fsPromises.rename(bindingFilePath, bindingBakFilePath)
-  //     // }
-  //     await replaceSqliteLib(arch)
-  //     break
+    await beforePack()
+    const { arch } = context
+    const electronVersion = context.packager?.info?._framework?.version ?? require('../package.json').devDependencies.electron.replace(/^[^\d]*?(\d+)/, '$1')
+    await copyLib(archMap[arch], parseInt(electronVersion) == 22)
+    // const electronNodeAbi = nodeAbi.getAbi(electronVersion, 'electron')
+    // if (electronPlatformName !== 'linux' || process.env.FORCE) return
+    // // const bindingFilePath = path.join(__dirname, '../node_modules/better-sqlite3/binding.gyp')
+    // // const bindingBakFilePath = path.join(__dirname, '../node_modules/better-sqlite3/binding.gyp.bak')
+    // switch (arch) {
+    //   case Arch.x64:
+    //   case Arch.arm64:
+    //   case Arch.armv7l:
+    //     // if (fs.existsSync(bindingFilePath)) {
+    //     //   // console.log('rename binding file...')
+    //     //   await fsPromises.rename(bindingFilePath, bindingBakFilePath)
+    //     // }
+    //     await replaceSqliteLib(arch)
+    //     break
 
-  //   default:
-  //     // if (fs.existsSync(bindingFilePath)) return
-  //     // console.log('restore binding file...')
-  //     // await fsPromises.rename(bindingBakFilePath, bindingFilePath)
-  //     await copyLib(arch)
-  //     break
-  // }
+    //   default:
+    //     // if (fs.existsSync(bindingFilePath)) return
+    //     // console.log('restore binding file...')
+    //     // await fsPromises.rename(bindingBakFilePath, bindingFilePath)
+    //     await copyLib(arch)
+    //     break
+    // }
 }

@@ -205,6 +205,13 @@ const logs = [
     // https://github.com/electron/electron/issues/32133
     '"Electron sandbox_bundle.js script failed to run"',
     '"TypeError: object null is not iterable (cannot read property Symbol(Symbol.iterator))",',
+
+    // Node.js --inspect 调试器提示
+    'Debugger listening on ws://127.0.0.1:5858',
+    'For help, see: https://nodejs.org/learn/getting-started/debugging',
+
+    // Electron 扩展 API 弃用警告
+    "session.getAllExtensions' is deprecated",
 ]
 function electronLog(data, color) {
     let log = data.toString()

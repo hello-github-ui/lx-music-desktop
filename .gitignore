@@ -71,3 +71,7 @@ publish/assets
 publish/utils/githubToken.js
 
 src/**/*-internal.js
+
+# Vue DevTools 本地扩展（由 npm run download-devtools 下载）
+build-config/lib/vue-devtools/*
+!build-config/lib/vue-devtools/.gitkeep

@@ -18,7 +18,7 @@ export const setUserApi = async(apiId: string) => {
         })
     }
 
-    if (/^user_api/.test(apiId)) {
+    if (/^(user_api|builtin)_/.test(apiId)) {
         qualityList.value = {}
         userApi.status = false
         userApi.message = 'initing'

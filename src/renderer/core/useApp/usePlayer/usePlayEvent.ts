@@ -65,11 +65,12 @@ export default () => {
             const otherSources = await getOtherSource(currentMusic)
             if (!otherSources.length) return false
 
+            const currentSource = 'progress' in currentMusic ? currentMusic.metadata.musicInfo.source : currentMusic.source
             const { url } = await getOnlineOtherSourceMusicUrl({
                 musicInfos: [...otherSources],
                 onToggleSource: () => {},
                 isRefresh: true,
-                retryedSource: [currentMusic.source],
+                retryedSource: [currentSource],
             })
             if (window.lx.isPlayedStop) return false
             console.log('[autoToggleSource] success, playing from other source')

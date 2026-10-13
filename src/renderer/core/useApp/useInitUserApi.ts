@@ -6,6 +6,7 @@ import { qualityList, userApi } from '@renderer/store'
 import { appSetting } from '@renderer/store/setting'
 import { dialog } from '@renderer/plugins/Dialog'
 import { setUserApi } from '@renderer/core/apiSource'
+import apiSourceInfo from '@renderer/utils/musicSdk/api-source-info'
 
 const sendUserApiRequest: typeof sendUserApiRequestRemote = async(data) => {
     let stop: () => void
@@ -171,17 +172,22 @@ export default () => {
     })
 
     return async() => {
-        await setUserApi(appSetting['common.apiSource'])
-        void getUserApiList().then(list => {
-            // console.log(list)
-            // if (![...apiSourceInfo.map(s => s.id), ...list.map(s => s.id)].includes(appSetting['common.apiSource'])) {
-            //   console.warn('reset api')
-            //   let api = apiSourceInfo.find(api => !api.disabled)
-            //   if (api) apiSource.value = api.id
-            // }
-            userApi.list = list
-        }).catch(err => {
+        // 先加载音源列表，再决定使用哪个音源
+        const list = await getUserApiList().catch(err => {
             console.log(err)
+            return [] as LX.UserApi.UserApiInfo[]
         })
+        userApi.list = list
+
+        // 如果当前配置的音源不可用，自动选中第一个内置音源
+        const currentSource = appSetting['common.apiSource']
+        const builtinList = list.filter(api => /^builtin_/.test(api.id))
+        const isCurrentValid = list.some(api => api.id === currentSource) || apiSourceInfo.some(api => api.id === currentSource && !api.disabled)
+        if (!isCurrentValid && builtinList.length) {
+            console.log(`当前音源「${currentSource}」不可用，自动切换到第一个内置音源「${builtinList[0].name}」`)
+            await setUserApi(builtinList[0].id)
+        } else {
+            await setUserApi(currentSource)
+        }
     }
 }

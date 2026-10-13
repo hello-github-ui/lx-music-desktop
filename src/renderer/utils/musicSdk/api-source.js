@@ -31,7 +31,7 @@ for (const api of apiSourceInfo) {
 const getAPI = source => apiList[`${apiSource.value}_api_${source}`]
 
 const apis = source => {
-    if (/^user_api/.test(apiSource.value)) return userApi.apis[source]
+    if (/^(user_api|builtin)_/.test(apiSource.value)) return userApi.apis[source]
     let api = getAPI(source)
     if (api) return api
     throw new Error('Api is not found')

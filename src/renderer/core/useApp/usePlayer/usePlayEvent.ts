@@ -6,11 +6,14 @@ import { playNext, setMusicUrl } from '@renderer/core/player'
 import { setAllStatus } from '@renderer/store/player/action'
 import { appSetting } from '@renderer/store/setting'
 import { getOtherSource, getOnlineOtherSourceMusicUrl } from '@renderer/core/music/utils'
+import { setUserApi } from '@renderer/core/apiSource'
+import { userApi } from '@renderer/store'
 
 export default () => {
     const t = useI18n()
     let retryNum = 0
     let toggleSourceRetryNum = 0
+    let builtinSourceRetryNum = 0
     let prevTimeoutId: string | null = null
 
     let loadingTimeout: NodeJS.Timeout | null = null
@@ -83,6 +86,36 @@ export default () => {
         }
     }
 
+    // 自动切换到下一个内置音源并重试播放
+    const tryNextBuiltinSource = async() => {
+        const currentMusic = playMusicInfo.musicInfo
+        if (!currentMusic) return false
+        const builtinList = userApi.list.filter(api => /^builtin_/.test(api.id))
+        if (builtinList.length < 2) return false
+
+        // 从当前音源之后开始找下一个可用的（跳过当前音源）
+        const currentId = appSetting['common.apiSource']
+        const startIndex = builtinList.findIndex(api => api.id === currentId)
+        // 已尝试的音源数量 +1，用于从列表中取下一个
+        const tryOffset = builtinSourceRetryNum + 1
+        const nextIndex = (startIndex + tryOffset) % builtinList.length
+        const nextSource = builtinList[nextIndex]
+        if (nextSource.id === currentId) return false
+
+        console.log(`[autoBuiltinSource] 切换音源: ${currentId} -> ${nextSource.id} (${nextSource.name})`)
+        setAllStatus(`切换到音源「${nextSource.name}」...`)
+        try {
+            await setUserApi(nextSource.id)
+            if (window.lx.isPlayedStop) return false
+            // 切换音源后重新获取URL播放
+            setMusicUrl(currentMusic, true)
+            return true
+        } catch (err) {
+            console.log('[autoBuiltinSource] 切换失败:', (err as Error).message)
+            return false
+        }
+    }
+
     const handleLoadstart = () => {
         if (window.lx.isPlayedStop) return
         if (appSetting['player.autoSkipOnError']) startLoadingTimeout()
@@ -121,12 +154,25 @@ export default () => {
             return
         }
 
-        // 第二阶段：同源重试失败后，自动换源搜索其他平台
+        // 第二阶段：同源重试失败后，搜索其他平台音源
         if (playMusicInfo.musicInfo && errCode !== 1 && toggleSourceRetryNum < 1) {
             toggleSourceRetryNum++
             void tryToggleSource().then((success) => {
                 if (success) return
-                // 换源也失败了，进入跳过逻辑
+                // 第三阶段：跨平台换源也失败，尝试切换到下一个内置音源
+                void tryNextBuiltinSource().then((switched) => {
+                    if (switched) return
+                    handleFatalError()
+                })
+            })
+            return
+        }
+
+        // 第三阶段重试：切换音源后再次报错，尝试下一个内置音源
+        if (playMusicInfo.musicInfo && errCode !== 1 && builtinSourceRetryNum < 5) {
+            builtinSourceRetryNum++
+            void tryNextBuiltinSource().then((switched) => {
+                if (switched) return
                 handleFatalError()
             })
             return
@@ -150,6 +196,7 @@ export default () => {
     const handleSetPlayInfo = () => {
         retryNum = 0
         toggleSourceRetryNum = 0
+        builtinSourceRetryNum = 0
         prevTimeoutId = null
         clearDelayNextTimeout()
         clearLoadingTimeout()

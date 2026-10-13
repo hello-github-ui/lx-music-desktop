@@ -179,13 +179,21 @@ export default () => {
         })
         userApi.list = list
 
-        // 如果当前配置的音源不可用，自动选中第一个内置音源
+        // 如果当前配置的音源不可用，自动选中一个可用的内置音源
         const currentSource = appSetting['common.apiSource']
         const builtinList = list.filter(api => /^builtin_/.test(api.id))
         const isCurrentValid = list.some(api => api.id === currentSource) || apiSourceInfo.some(api => api.id === currentSource && !api.disabled)
         if (!isCurrentValid && builtinList.length) {
-            console.log(`当前音源「${currentSource}」不可用，自动切换到第一个内置音源「${builtinList[0].name}」`)
-            await setUserApi(builtinList[0].id)
+            // 音源优先级列表（排在前面的优先选中），跳过已知有问题的音源
+            const preferredOrder = [
+                'builtin_ikun-source',
+                'builtin_六音自定义源',
+                'builtin_肥猫不肥',
+                'builtin_Huibq_lxmusic源',
+            ]
+            let target = builtinList.find(api => preferredOrder.includes(api.id)) ?? builtinList[0]
+            console.log(`当前音源「${currentSource}」不可用，自动切换到内置音源「${target.name}」`)
+            await setUserApi(target.id)
         } else {
             await setUserApi(currentSource)
         }

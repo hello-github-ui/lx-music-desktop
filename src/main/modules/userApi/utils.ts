@@ -90,7 +90,7 @@ export const getUserApis = (): LX.UserApi.UserApiInfo[] => {
         return info
     })
 
-    console.log(`缓存的音源列表: ${storedApis}`)
+    console.log(`缓存的音源列表: ${JSON.stringify(storedApis)}`)
 
     // 合并内置音源和用户导入的音源（内置音源排在前面）
     userApis = [...builtinApis, ...storedApis]

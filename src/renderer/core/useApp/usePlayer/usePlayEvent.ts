@@ -1,20 +1,21 @@
 import { onBeforeUnmount } from '@common/utils/vueTools'
 import { useI18n } from '@renderer/plugins/i18n'
 import { musicInfo, playMusicInfo } from '@renderer/store/player/state'
-import { setStop, isEmpty } from '@renderer/plugins/player'
+import { setStop, isEmpty, setResource, setPlay } from '@renderer/plugins/player'
 import { playNext, setMusicUrl } from '@renderer/core/player'
 import { setAllStatus } from '@renderer/store/player/action'
 import { appSetting } from '@renderer/store/setting'
+import { getOtherSource, getOnlineOtherSourceMusicUrl } from '@renderer/core/music/utils'
 
 export default () => {
     const t = useI18n()
     let retryNum = 0
+    let toggleSourceRetryNum = 0
     let prevTimeoutId: string | null = null
 
     let loadingTimeout: NodeJS.Timeout | null = null
     let delayNextTimeout: NodeJS.Timeout | null = null
     const startLoadingTimeout = () => {
-        // console.log('start load timeout')
         clearLoadingTimeout()
         loadingTimeout = setTimeout(() => {
             if (window.lx.isPlayedStop) {
@@ -35,13 +36,11 @@ export default () => {
     }
     const clearLoadingTimeout = () => {
         if (!loadingTimeout) return
-        // console.log('clear load timeout')
         clearTimeout(loadingTimeout)
         loadingTimeout = null
     }
 
     const clearDelayNextTimeout = () => {
-        // console.log(this.delayNextTimeout)
         if (!delayNextTimeout) return
         clearTimeout(delayNextTimeout)
         delayNextTimeout = null
@@ -55,6 +54,32 @@ export default () => {
             }
             void playNext(true)
         }, 5000)
+    }
+
+    // 自动换源：搜索同一歌曲在其他平台的音源并尝试播放
+    const tryToggleSource = async() => {
+        const currentMusic = playMusicInfo.musicInfo
+        if (!currentMusic) return false
+        try {
+            setAllStatus(t('toggle_source_try'))
+            const otherSources = await getOtherSource(currentMusic)
+            if (!otherSources.length) return false
+
+            const { url } = await getOnlineOtherSourceMusicUrl({
+                musicInfos: [...otherSources],
+                onToggleSource: () => {},
+                isRefresh: true,
+                retryedSource: [currentMusic.source],
+            })
+            if (window.lx.isPlayedStop) return false
+            console.log('[autoToggleSource] success, playing from other source')
+            setResource(url)
+            setPlay()
+            return true
+        } catch (err) {
+            console.log('[autoToggleSource] failed:', (err as Error).message)
+            return false
+        }
     }
 
     const handleLoadstart = () => {
@@ -86,14 +111,30 @@ export default () => {
         clearLoadingTimeout()
         if (window.lx.isPlayedStop) return
         if (!isEmpty()) setStop()
-        if (playMusicInfo.musicInfo && errCode !== 1 && retryNum < 2) { // 若音频URL无效则尝试刷新2次URL
-            // console.log(this.retryNum)
+
+        // 第一阶段：同源重试 2 次（重新请求当前音源的 URL）
+        if (playMusicInfo.musicInfo && errCode !== 1 && retryNum < 2) {
             retryNum++
             setMusicUrl(playMusicInfo.musicInfo, true)
             setAllStatus(t('player__refresh_url'))
             return
         }
 
+        // 第二阶段：同源重试失败后，自动换源搜索其他平台
+        if (playMusicInfo.musicInfo && errCode !== 1 && toggleSourceRetryNum < 1) {
+            toggleSourceRetryNum++
+            void tryToggleSource().then((success) => {
+                if (success) return
+                // 换源也失败了，进入跳过逻辑
+                handleFatalError()
+            })
+            return
+        }
+
+        handleFatalError()
+    }
+
+    const handleFatalError = () => {
         if (appSetting['player.autoSkipOnError']) {
             if (document.hidden) {
                 console.warn('error skip to next')
@@ -107,15 +148,11 @@ export default () => {
 
     const handleSetPlayInfo = () => {
         retryNum = 0
+        toggleSourceRetryNum = 0
         prevTimeoutId = null
         clearDelayNextTimeout()
         clearLoadingTimeout()
     }
-
-    // const handlePlayedStop = () => {
-    //   clearDelayNextTimeout()
-    //   clearLoadingTimeout()
-    // }
 
 
     window.app_event.on('playerLoadstart', handleLoadstart)

@@ -1,7 +1,9 @@
-import { userApis as defaultUserApis } from './config'
-import { STORE_NAMES } from '@common/constants'
+import {userApis as defaultUserApis} from './config'
+import {STORE_NAMES} from '@common/constants'
 import getStore from '@main/utils/store'
 import zlib from 'node:zlib'
+import path from 'path'
+import fs from 'fs'
 
 let userApis: LX.UserApi.UserApiInfo[] | null
 let scripts = new Map<string, string>()
@@ -15,8 +17,49 @@ const saveData = () => {
     }))
 }
 
+/**
+ * 加载内置音源：从磁盘读取 .js 文件，解析 JSDoc 元信息，存入 userApis 和 scripts
+ */
+const loadBuiltinUserApis = (): LX.UserApi.UserApiInfo[] => {
+    const result: LX.UserApi.UserApiInfo[] = []
+    // dev 模式下 __dirname 指向 dist/，build-config 在项目根目录（dist 的上一级）
+    const dir = path.join(__dirname, '../build-config/user-apis')
+    // 读取 user-apis 目录下所有的 js 文件 内置音源文件列表（相对于 build-config/user-apis 目录）
+    const user_api_files = fs.readdirSync(dir)
+        .filter(name => path.extname(name).toLocaleLowerCase() === ".js");
+    // const user_api_files = ['flower.js']
+    console.log(`内置音源列表: ${user_api_files}`)
+    for (const filename of user_api_files) {
+        const filePath = path.join(dir, filename)
+        try {
+            const script = fs.readFileSync(filePath, 'utf8')
+            const info = parseScriptInfo(script)
+            const id = `builtin_${path.basename(filename, '.js')}`
+            scripts.set(id, script)
+            result.push({
+                id,
+                name: info.name || filename,
+                description: info.description || '',
+                author: info.author || '',
+                homepage: info.homepage || '',
+                version: info.version || '',
+                allowShowUpdateAlert: false,
+            })
+        } catch (err) {
+            console.error(`[userApi] 加载内置音源失败: ${filename}`, (err as Error).message)
+        }
+    }
+    return result
+}
+
+/**
+ * 获取 音源
+ */
 export const getUserApis = (): LX.UserApi.UserApiInfo[] => {
     if (userApis) return userApis
+
+    // 先加载内置音源
+    const builtinApis = loadBuiltinUserApis()
 
     const electronStore_userApi = getStore(STORE_NAMES.USER_API)
     let infoFull = electronStore_userApi.get('userApis') as LX.UserApi.UserApiInfoFull[]
@@ -40,12 +83,17 @@ export const getUserApis = (): LX.UserApi.UserApiInfo[] => {
         infoFull = defaultUserApis
         electronStore_userApi.set('userApis', userApis)
     }
-    userApis = infoFull.map(api => {
+    const storedApis = infoFull.map(api => {
         if (api.allowShowUpdateAlert == null) api.allowShowUpdateAlert = false
-        const { script, ...info } = api
+        const {script, ...info} = api
         scripts.set(api.id, script)
         return info
     })
+
+    console.log(`缓存的音源列表: ${storedApis}`)
+
+    // 合并内置音源和用户导入的音源（内置音源排在前面）
+    userApis = [...builtinApis, ...storedApis]
     if (requiredUpdate) saveData()
     return userApis
 }
@@ -87,7 +135,7 @@ const parseScriptInfo = (script: string) => {
     scriptInfo.name ||= `user_api_${new Date().toLocaleString()}`
     return scriptInfo
 }
-const deflateScript = async(script: string) => new Promise<string>((resolve, reject) => {
+const deflateScript = async (script: string) => new Promise<string>((resolve, reject) => {
     zlib.deflate(Buffer.from(script, 'utf8'), (err, buf) => {
         if (err) {
             reject(err)
@@ -96,7 +144,7 @@ const deflateScript = async(script: string) => new Promise<string>((resolve, rej
         resolve('gz_' + buf.toString('base64'))
     })
 })
-const inflateScript = async(script: string) => new Promise<string>((resolve, reject) => {
+const inflateScript = async (script: string) => new Promise<string>((resolve, reject) => {
     if (script.startsWith('gz_')) {
         zlib.inflate(Buffer.from(script.substring(3), 'base64'), (err, buf) => {
             if (err) {
@@ -107,7 +155,7 @@ const inflateScript = async(script: string) => new Promise<string>((resolve, rej
         })
     } else resolve(script)
 })
-export const importApi = async(scriptRaw: string): Promise<LX.UserApi.UserApiInfo> => {
+export const importApi = async (scriptRaw: string): Promise<LX.UserApi.UserApiInfo> => {
     let scriptInfo = parseScriptInfo(scriptRaw)
     const script = await deflateScript(scriptRaw)
     userApis ??= []
@@ -147,6 +195,6 @@ export const setAllowShowUpdateAlert = (id: string, enable: boolean) => {
     saveData()
 }
 
-export const getScript = async(id: string) => {
+export const getScript = async (id: string) => {
     return inflateScript(scripts.get(id) ?? '')
 }

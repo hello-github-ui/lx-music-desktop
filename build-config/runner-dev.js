@@ -4,7 +4,7 @@ const chalk = require('chalk')
 const electron = require('electron')
 const path = require('path')
 // const { say } = require('cfonts')
-const { spawn } = require('child_process')
+const {spawn} = require('child_process')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -14,14 +14,29 @@ const mainConfig = require('./main/webpack.config.dev')
 const rendererConfig = require('./renderer/webpack.config.dev')
 const rendererLyricConfig = require('./renderer-lyric/webpack.config.dev')
 const rendererScriptConfig = require('./renderer-scripts/webpack.config.dev')
-const { Arch } = require('electron-builder')
+const {Arch} = require('electron-builder')
 const replaceLib = require('./build-before-pack')
 const treeKill = require('tree-kill')
-const { debounce } = require('./utils')
+const {debounce} = require('./utils')
 
 let electronProcess = null
 let hotMiddlewareRenderer
 let hotMiddlewareRendererLyric
+
+// 复制 build-config/lib 下的 vue-devtools 整体复制到 dist 目录下
+const fs = require('node:fs/promises');
+const path2 = require('node:path');
+
+async function copyLibToDist() {
+    // runner-dev.js __dirname: C:\Users\EDY\code\lx-music-desktop\build-config
+    console.log(`runner-dev.js __dirname: ${__dirname}`);
+    const source = path2.join(__dirname, "../build-config/lib/vue-devtools");
+    const destination = path2.join(__dirname, "../dist/build-config/lib/vue-devtools");
+    await fs.cp(source, destination, {
+        recursive: true,
+        force: true,
+    });
+}
 
 
 function startRenderer() {
@@ -37,7 +52,7 @@ function startRenderer() {
         compiler.hooks.compilation.tap('compilation', compilation => {
             // console.log(Object.keys(compilation.hooks))
             HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync('html-webpack-plugin-after-emit', (data, cb) => {
-                hotMiddlewareRenderer.publish({ action: 'reload' })
+                hotMiddlewareRenderer.publish({action: 'reload'})
                 cb()
             })
         })
@@ -86,7 +101,7 @@ function startRendererLyric() {
         compiler.hooks.compilation.tap('compilation', compilation => {
             // console.log(Object.keys(compilation.hooks))
             HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync('html-webpack-plugin-after-emit', (data, cb) => {
-                hotMiddlewareRendererLyric.publish({ action: 'reload' })
+                hotMiddlewareRendererLyric.publish({action: 'reload'})
                 cb()
             })
         })
@@ -145,16 +160,25 @@ function startMain() {
         const compiler = webpack(mainConfig)
 
         compiler.hooks.watchRun.tapAsync('watch-run', (compilation, done) => {
-            hotMiddlewareRenderer.publish({ action: 'compiling' })
-            hotMiddlewareRendererLyric.publish({ action: 'compiling' })
+            hotMiddlewareRenderer.publish({action: 'compiling'})
+            hotMiddlewareRendererLyric.publish({action: 'compiling'})
             done()
         })
 
-        compiler.watch({}, (err, stats) => {
-            if (err) {
-                console.log(err)
-                reject(err)
-                return
+        compiler.watch({}, async (err, stats) => {
+            if (err || stats.hasErrors()) {
+                console.error(err || stats.toString({errors: true}));
+                if (firstRun) reject(err || new Error('Main 编译失败'));
+                return;
+            }
+
+            try {
+                await copyLibToDist();
+                console.log('复制 build-config/lib/vue-devtools 到 dist/build-config/lib/vue-devtools 成功')
+            } catch (copyErr) {
+                console.error('复制 vue-devtools 到 dist 失败：', copyErr);
+                if (firstRun) reject(copyErr);
+                return;
             }
 
             // logStats('Main', stats)
@@ -213,6 +237,7 @@ const logs = [
     // Electron 扩展 API 弃用警告
     "session.getAllExtensions' is deprecated",
 ]
+
 function electronLog(data, color) {
     let log = data.toString()
     if (/[0-9A-z]+/.test(log)) {
@@ -225,18 +250,21 @@ function electronLog(data, color) {
 
 function init() {
     const Spinnies = require('spinnies')
-    const spinners = new Spinnies({ color: 'blue' })
-    spinners.add('main', { text: 'main compiling' })
-    spinners.add('renderer', { text: 'renderer compiling' })
-    spinners.add('renderer-lyric', { text: 'renderer-lyric compiling' })
-    spinners.add('renderer-scripts', { text: 'renderer-scripts compiling' })
+    const spinners = new Spinnies({color: 'blue'})
+    spinners.add('main', {text: 'main compiling'})
+    spinners.add('renderer', {text: 'renderer compiling'})
+    spinners.add('renderer-lyric', {text: 'renderer-lyric compiling'})
+    spinners.add('renderer-scripts', {text: 'renderer-scripts compiling'})
+
     function handleSuccess(name) {
-        spinners.succeed(name, { text: name + ' compile success!' })
+        spinners.succeed(name, {text: name + ' compile success!'})
     }
+
     function handleFail(name) {
-        spinners.fail(name, { text: name + ' compile fail!' })
+        spinners.fail(name, {text: name + ' compile fail!'})
     }
-    replaceLib({ electronPlatformName: process.platform, arch: Arch[process.arch] })
+
+    replaceLib({electronPlatformName: process.platform, arch: Arch[process.arch]})
 
     Promise.all([
         startRenderer().then(() => handleSuccess('renderer')).catch((err) => {

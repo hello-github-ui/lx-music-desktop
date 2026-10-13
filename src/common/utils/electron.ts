@@ -1,37 +1,37 @@
-import { shell, clipboard } from 'electron'
+import {clipboard, shell} from 'electron'
 
 
 /**
-  * 在资源管理器中打开目录
-  * @param {string} dir
-  */
+ * 在资源管理器中打开目录
+ * @param {string} dir
+ */
 export const openDirInExplorer = (dir: string) => {
     shell.showItemInFolder(dir)
 }
 
 
 /**
-  * 在浏览器打开URL
-  * @param {*} url
-  */
-export const openUrl = async(url: string) => {
+ * 在浏览器打开URL
+ * @param {*} url
+ */
+export const openUrl = async (url: string) => {
     if (!/^https?:\/\//.test(url)) return
     await shell.openExternal(url)
 }
 
 
 /**
-  * 复制文本到剪贴板
-  * @param str
-  */
+ * 复制文本到剪贴板
+ * @param str
+ */
 export const clipboardWriteText = (str: string) => {
     clipboard.writeText(str)
 }
 
 /**
-  * 从剪贴板读取文本
-  * @returns
-  */
+ * 从剪贴板读取文本
+ * @returns
+ */
 export const clipboardReadText = (): string => {
     return clipboard.readText()
 }

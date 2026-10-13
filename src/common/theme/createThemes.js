@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const path = require('path')
-const { createThemeColors } = require('./utils')
+const {createThemeColors} = require('./utils')
 
 const defaultThemes = [
     {
@@ -369,7 +369,7 @@ const defaultThemes = [
     },
 ]
 
-const themes = defaultThemes.map(({ config: { primary, font, ...extInfo }, ...themeInfo }) => {
+const themes = defaultThemes.map(({config: {primary, font, ...extInfo}, ...themeInfo}) => {
     return {
         ...themeInfo,
         isCustom: false,

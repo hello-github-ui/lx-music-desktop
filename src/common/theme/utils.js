@@ -1,4 +1,4 @@
-const { RGB_Linear_Shade, RGB_Alpha_Shade } = require('./colorUtils')
+const {RGB_Linear_Shade, RGB_Alpha_Shade} = require('./colorUtils')
 
 exports.createThemeColors = (rgbaColor, fontRgbaColor, isDark, isDarkFont) => {
     const colors = {
@@ -30,7 +30,7 @@ exports.createThemeColors = (rgbaColor, fontRgbaColor, isDark, isDarkFont) => {
 
     colors['--color-theme'] = isDark ? colors['--color-primary-light-900'] : rgbaColor
 
-    return { ...colors, ...createFontColors(fontRgbaColor, isDark, isDarkFont) }
+    return {...colors, ...createFontColors(fontRgbaColor, isDark, isDarkFont)}
 }
 
 const createFontColors = (rgbaColor, isDark, isDarkFont) => {

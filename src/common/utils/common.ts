@@ -1,11 +1,12 @@
 // 非业务工具方法
 
-import { pathToFileURL } from 'url'
+import {pathToFileURL} from 'url'
+
 /**
-  * 获取两个数之间的随机整数，大于等于min，小于max
-  * @param {*} min
-  * @param {*} max
-  */
+ * 获取两个数之间的随机整数，大于等于min，小于max
+ * @param {*} min
+ * @param {*} max
+ */
 export const getRandom = (min: number, max: number): number => Math.floor(Math.random() * (max - min)) + min
 
 
@@ -18,10 +19,10 @@ export const sizeFormate = (size: number): string => {
 }
 
 /**
-  * 将字符串、时间戳等格式转成时间对象
-  * @param date 时间
-  * @returns 时间对象或空字符串
-  */
+ * 将字符串、时间戳等格式转成时间对象
+ * @param date 时间
+ * @returns 时间对象或空字符串
+ */
 export const toDateObj = (date: any): Date | '' => {
     // console.log(date)
     if (!date) return ''
@@ -34,17 +35,18 @@ export const toDateObj = (date: any): Date | '' => {
         // eslint-disable-next-line no-fallthrough
         case 'object':
             break
-        default: return ''
+        default:
+            return ''
     }
     return date
 }
 
 const numFix = (n: number): string => n < 10 ? (`0${n}`) : n.toString()
 /**
-  * 时间格式化
-  * @param _date 时间
-  * @param format Y-M-D h:m:s Y年 M月 D日 h时 m分 s秒
-  */
+ * 时间格式化
+ * @param _date 时间
+ * @param format Y-M-D h:m:s Y年 M月 D日 h时 m分 s秒
+ */
 export const dateFormat = (_date: any, format = 'Y-M-D h:m:s') => {
     // console.log(date)
     const date = toDateObj(_date)
@@ -87,11 +89,11 @@ export const parseUrlParams = (str: string): Record<string, string> => {
 }
 
 /**
-  * 生成节流函数
-  * @param fn 回调
-  * @param delay 延迟
-  * @returns
-  */
+ * 生成节流函数
+ * @param fn 回调
+ * @param delay 延迟
+ * @returns
+ */
 export function throttle<Args extends any[]>(fn: (...args: Args) => void | Promise<void>, delay = 100) {
     let timer: NodeJS.Timeout | null = null
     let _args: Args
@@ -106,11 +108,11 @@ export function throttle<Args extends any[]>(fn: (...args: Args) => void | Promi
 }
 
 /**
-  * 生成防抖函数
-  * @param fn 回调
-  * @param delay 延迟
-  * @returns
-  */
+ * 生成防抖函数
+ * @param fn 回调
+ * @param delay 延迟
+ * @returns
+ */
 export function debounce<Args extends any[]>(fn: (...args: Args) => void | Promise<void>, delay = 100) {
     let timer: NodeJS.Timeout | null = null
     let _args: Args
@@ -130,10 +132,10 @@ export const filterFileName = (name: string): string => name.replace(fileNameRxp
 
 // https://blog.csdn.net/xcxy2015/article/details/77164126#comments
 /**
-  *
-  * @param a
-  * @param b
-  */
+ *
+ * @param a
+ * @param b
+ */
 export const similar = (a: string, b: string) => {
     if (!a || !b) return 0
     if (a.length > b.length) { // 保证 a <= b
@@ -160,10 +162,10 @@ export const similar = (a: string, b: string) => {
 }
 
 /**
-  * 排序字符串
-  * @param arr
-  * @param data
-  */
+ * 排序字符串
+ * @param arr
+ * @param data
+ */
 export const sortInsert = <T>(arr: Array<{ num: number, data: T }>, data: { num: number, data: T }) => {
     let key = data.num
     let left = 0

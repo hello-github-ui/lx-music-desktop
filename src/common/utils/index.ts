@@ -9,9 +9,12 @@ export const isProd = process.env.NODE_ENV == 'production'
 
 export const getPlatform = (platform: NodeJS.Platform = process.platform) => {
     switch (platform) {
-        case 'win32': return 'windows'
-        case 'darwin': return 'mac'
-        default: return 'linux'
+        case 'win32':
+            return 'windows'
+        case 'darwin':
+            return 'mac'
+        default:
+            return 'linux'
     }
 }
 export const getOSVersion = (): string => {

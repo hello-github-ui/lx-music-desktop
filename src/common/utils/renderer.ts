@@ -1,4 +1,3 @@
-
 const easeInOutQuad = (t: number, b: number, c: number, d: number): number => {
     t /= d / 2
     if (t < 1) return (c / 2) * t * t + b
@@ -7,7 +6,8 @@ const easeInOutQuad = (t: number, b: number, c: number, d: number): number => {
 }
 
 type Noop = () => void
-const noop: Noop = () => {}
+const noop: Noop = () => {
+}
 type ScrollElement<T> = {
     lx_scrollLockKey?: number
     lx_scrollNextParams?: [ScrollElement<HTMLElement>, number, number, Noop]
@@ -90,14 +90,15 @@ const handleScrollY = (element: ScrollElement<HTMLElement>, to: number, duration
     return clean
 }
 /**
-    * 设置滚动条位置
-    * @param {*} element 要设置滚动的容器 dom
-    * @param {*} to 滚动的目标位置
-    * @param {*} duration 滚动完成时间 ms
-    * @param {*} fn 滚动完成后的回调
-    * @param {*} delay 延迟执行时间
-    */
-export const scrollTo = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {}, delay = 0): () => void => {
+ * 设置滚动条位置
+ * @param {*} element 要设置滚动的容器 dom
+ * @param {*} to 滚动的目标位置
+ * @param {*} duration 滚动完成时间 ms
+ * @param {*} fn 滚动完成后的回调
+ * @param {*} delay 延迟执行时间
+ */
+export const scrollTo = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {
+}, delay = 0): () => void => {
     let cancelFn: () => void
     if (element.lx_scrollDelayTimeout != null) {
         window.clearTimeout(element.lx_scrollDelayTimeout)
@@ -122,7 +123,8 @@ export const scrollTo = (element: ScrollElement<HTMLElement>, to: number, durati
     }
     return cancelFn
 }
-const handleScrollX = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {}): () => void => {
+const handleScrollX = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {
+}): () => void => {
     if (!element) {
         fn()
         return noop
@@ -194,14 +196,15 @@ const handleScrollX = (element: ScrollElement<HTMLElement>, to: number, duration
     return clean
 }
 /**
-    * 设置滚动条位置
-    * @param {*} element 要设置滚动的容器 dom
-    * @param {*} to 滚动的目标位置
-    * @param {*} duration 滚动完成时间 ms
-    * @param {*} fn 滚动完成后的回调
-    * @param {*} delay 延迟执行时间
-    */
-export const scrollXTo = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {}, delay = 0): () => void => {
+ * 设置滚动条位置
+ * @param {*} element 要设置滚动的容器 dom
+ * @param {*} to 滚动的目标位置
+ * @param {*} duration 滚动完成时间 ms
+ * @param {*} fn 滚动完成后的回调
+ * @param {*} delay 延迟执行时间
+ */
+export const scrollXTo = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {
+}, delay = 0): () => void => {
     let cancelFn: Noop
     if (element.lx_scrollDelayTimeout != null) {
         window.clearTimeout(element.lx_scrollDelayTimeout)
@@ -227,7 +230,8 @@ export const scrollXTo = (element: ScrollElement<HTMLElement>, to: number, durat
     return cancelFn
 }
 
-const handleScrollXR = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {}): () => void => {
+const handleScrollXR = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {
+}): () => void => {
     if (!element) {
         fn()
         return noop
@@ -303,14 +307,15 @@ const handleScrollXR = (element: ScrollElement<HTMLElement>, to: number, duratio
     return clean
 }
 /**
-    * 设置滚动条位置 （writing-mode: vertical-rl 专用）
-    * @param element 要设置滚动的容器 dom
-    * @param to 滚动的目标位置
-    * @param duration 滚动完成时间 ms
-    * @param fn 滚动完成后的回调
-    * @param delay 延迟执行时间
-    */
-export const scrollXRTo = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {}, delay = 0): () => void => {
+ * 设置滚动条位置 （writing-mode: vertical-rl 专用）
+ * @param element 要设置滚动的容器 dom
+ * @param to 滚动的目标位置
+ * @param duration 滚动完成时间 ms
+ * @param fn 滚动完成后的回调
+ * @param delay 延迟执行时间
+ */
+export const scrollXRTo = (element: ScrollElement<HTMLElement>, to: number, duration = 300, fn = () => {
+}, delay = 0): () => void => {
     let cancelFn: Noop
     if (element.lx_scrollDelayTimeout != null) {
         window.clearTimeout(element.lx_scrollDelayTimeout)
@@ -338,8 +343,8 @@ export const scrollXRTo = (element: ScrollElement<HTMLElement>, to: number, dura
 
 
 /**
-    * 设置标题
-    */
+ * 设置标题
+ */
 let dom_title = document.getElementsByTagName('title')[0]
 export const setTitle = (title: string | null) => {
     title ||= 'LX Music'

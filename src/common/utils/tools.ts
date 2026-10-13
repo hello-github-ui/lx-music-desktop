@@ -100,9 +100,9 @@ export const toOldMusicInfo = (minfo: LX.Music.MusicInfo) => {
 }
 
 /**
-  * 修复2.0.0-dev.8之前的新列表数据音质
-  * @param musicInfo
-  */
+ * 修复2.0.0-dev.8之前的新列表数据音质
+ * @param musicInfo
+ */
 export const fixNewMusicInfoQuality = (musicInfo: LX.Music.MusicInfo) => {
     if (musicInfo.source == 'local') return musicInfo
 

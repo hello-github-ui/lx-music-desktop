@@ -1,12 +1,12 @@
 import qs from 'node:querystring'
 import {
+    type Dispatcher,
     FormData,
     getGlobalDispatcher,
     interceptors,
-    request as nodeRrequest,
     ProxyAgent,
+    request as nodeRrequest,
     setGlobalDispatcher,
-    type Dispatcher,
 } from 'undici'
 
 const defaultOptions: Options = {
@@ -17,7 +17,7 @@ const defaultOptions: Options = {
     },
     maxRedirect: 5,
 } as const
-const redirectDispatcher = interceptors.redirect({ maxRedirections: defaultOptions.maxRedirect })
+const redirectDispatcher = interceptors.redirect({maxRedirections: defaultOptions.maxRedirect})
 const dispatchers = [
     interceptors.retry({
         maxRetries: 3,
@@ -35,14 +35,14 @@ const buildDispatcher = (redirectDispatcher: Dispatcher.DispatcherComposeInterce
         retryNum == 3
             ? dispatchers
             : [
-                    interceptors.retry({
-                        maxRetries: retryNum,
-                        minTimeout: 1000,
-                        maxTimeout: 6000,
-                        timeoutFactor: 2,
-                        retryAfter: true,
-                    }),
-                ]
+                interceptors.retry({
+                    maxRetries: retryNum,
+                    minTimeout: 1000,
+                    maxTimeout: 6000,
+                    timeoutFactor: 2,
+                    retryAfter: true,
+                }),
+            ]
     if (redirectDispatcher) {
         return (proxyAgent ?? globalDispatcher).compose(redirectDispatcher, ...otherInterceptors)
     }
@@ -67,21 +67,22 @@ const CONTENT_TYPE = {
     binary: 'application/octet-stream',
 }
 type ParamsData = Record<string, string | number | null | undefined | boolean>
+
 export interface Options {
     method?:
-    | 'GET'
-    | 'HEAD'
-    | 'POST'
-    | 'PUT'
-    | 'DELETE'
-    | 'OPTIONS'
-    | 'PATCH'
-    | 'PROPFIND'
-    | 'COPY'
-    | 'MOVE'
-    | 'MKCOL'
-    | 'PROPPATCH'
-    | 'QUOTA'
+        | 'GET'
+        | 'HEAD'
+        | 'POST'
+        | 'PUT'
+        | 'DELETE'
+        | 'OPTIONS'
+        | 'PATCH'
+        | 'PROPFIND'
+        | 'COPY'
+        | 'MOVE'
+        | 'MKCOL'
+        | 'PROPPATCH'
+        | 'QUOTA'
     query?: ParamsData
     headers?: Record<string, string | string[]>
     timeout?: number
@@ -97,6 +98,7 @@ export interface Options {
     needRaw?: boolean
     retryNum?: number
 }
+
 export interface Response<Res> {
     headers: {
         accept?: string | undefined
@@ -200,7 +202,7 @@ const buildRequestBody = (options: Options) => {
     if (headers['Content-Type']) {
         contentType = headers['Content-Type'] as string
     }
-    const finalHeaders: NonNullable<Options['headers']> = { ...defaultOptions.headers, ...headers }
+    const finalHeaders: NonNullable<Options['headers']> = {...defaultOptions.headers, ...headers}
     if (contentType) finalHeaders['Content-Type'] = contentType
     return [finalHeaders, body] as const
 }
@@ -211,7 +213,7 @@ const buildRequestDispatcher = (options: Options) => {
     if (options.maxRedirect != null) {
         if (options.maxRedirect != defaultOptions.maxRedirect) {
             if (options.maxRedirect) {
-                dispatcher = buildDispatcher(interceptors.redirect({ maxRedirections: options.maxRedirect }), options.retryNum)
+                dispatcher = buildDispatcher(interceptors.redirect({maxRedirections: options.maxRedirect}), options.retryNum)
             } else {
                 dispatcher = buildDispatcher(null, options.retryNum)
             }
@@ -243,7 +245,7 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
         body,
         signal: options.signal,
         dispatcher: buildRequestDispatcher(options),
-    }).then(async(response) => {
+    }).then(async (response) => {
         if (options.needBody) {
             return {
                 headers: response.headers,
@@ -263,7 +265,8 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
         if (!headers['Content-Type'] || headers['Content-Type'].includes(CONTENT_TYPE.json)) {
             try {
                 body = JSON.parse(body as string) as T
-            } catch {}
+            } catch {
+            }
         }
         return {
             body,

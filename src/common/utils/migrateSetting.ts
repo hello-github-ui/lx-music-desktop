@@ -1,4 +1,4 @@
-import { compareVer } from './index'
+import {compareVer} from './index'
 
 const oldThemeMap = {
     0: 'green',
@@ -18,7 +18,7 @@ const oldThemeMap = {
 } as const
 
 export default (setting: any): Partial<LX.AppSetting> => {
-    setting = { ...setting }
+    setting = {...setting}
 
     // 迁移 v2.0.0 之前的配置
     if (compareVer(setting.version, '2.0.0') < 0) {

@@ -1,16 +1,16 @@
-import { app } from 'electron'
+import {app} from 'electron'
 import './utils/logInit'
 import '@common/error'
 import {
+    applyElectronEnvParams,
     initGlobalData,
     initSingleInstanceHandle,
-    applyElectronEnvParams,
-    setUserDataPath,
-    registerDeeplink,
     listenerAppEvent,
+    registerDeeplink,
+    setUserDataPath,
 } from './app'
-import { isLinux } from '@common/utils'
-import { initAppSetting } from '@main/app'
+import {isLinux} from '@common/utils'
+import {initAppSetting} from '@main/app'
 import registerModules from '@main/modules'
 
 // 初始化应用

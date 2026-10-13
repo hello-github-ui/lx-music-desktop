@@ -1,11 +1,11 @@
 import qs from 'node:querystring'
 import {
+    type Dispatcher,
     FormData,
     getGlobalDispatcher,
-    request as nodeRrequest,
     ProxyAgent,
+    request as nodeRrequest,
     setGlobalDispatcher,
-    type Dispatcher,
 } from 'undici'
 
 const defaultOptions: Options = {
@@ -41,21 +41,22 @@ const CONTENT_TYPE = {
     binary: 'application/octet-stream',
 }
 type ParamsData = Record<string, string | number | null | undefined | boolean>
+
 export interface Options {
     method?:
-    | 'GET'
-    | 'HEAD'
-    | 'POST'
-    | 'PUT'
-    | 'DELETE'
-    | 'OPTIONS'
-    | 'PATCH'
-    | 'PROPFIND'
-    | 'COPY'
-    | 'MOVE'
-    | 'MKCOL'
-    | 'PROPPATCH'
-    | 'QUOTA'
+        | 'GET'
+        | 'HEAD'
+        | 'POST'
+        | 'PUT'
+        | 'DELETE'
+        | 'OPTIONS'
+        | 'PATCH'
+        | 'PROPFIND'
+        | 'COPY'
+        | 'MOVE'
+        | 'MKCOL'
+        | 'PROPPATCH'
+        | 'QUOTA'
     query?: ParamsData
     headers?: Record<string, string | string[]>
     timeout?: number
@@ -71,6 +72,7 @@ export interface Options {
     needRaw?: boolean
     retryNum?: number
 }
+
 export interface Response<Res> {
     headers: {
         accept?: string | undefined
@@ -174,7 +176,7 @@ const buildRequestBody = (options: Options) => {
     if (headers['Content-Type']) {
         contentType = headers['Content-Type'] as string
     }
-    const finalHeaders: NonNullable<Options['headers']> = { ...defaultOptions.headers, ...headers }
+    const finalHeaders: NonNullable<Options['headers']> = {...defaultOptions.headers, ...headers}
     if (contentType) finalHeaders['Content-Type'] = contentType
     return [finalHeaders, body] as const
 }
@@ -207,7 +209,7 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
         signal: options.signal,
         dispatcher: buildRequestDispatcher(options),
         maxRedirections: options.maxRedirect ?? defaultOptions.maxRedirect,
-    }).then(async(response) => {
+    }).then(async (response) => {
         if (options.needBody) {
             return {
                 headers: response.headers,
@@ -227,7 +229,8 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
         if (!headers['Content-Type'] || headers['Content-Type'].includes(CONTENT_TYPE.json)) {
             try {
                 body = JSON.parse(body as string) as T
-            } catch {}
+            } catch {
+            }
         }
         return {
             body,

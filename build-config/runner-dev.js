@@ -1,5 +1,7 @@
 process.env.NODE_ENV = 'development'
 
+// 引入统一路径工具
+const paths = require('../common/paths')
 const chalk = require('chalk')
 const electron = require('electron')
 const path = require('path')
@@ -10,14 +12,14 @@ const WebpackDevServer = require('webpack-dev-server')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 
-const mainConfig = require('./main/webpack.config.dev')
-const rendererConfig = require('./renderer/webpack.config.dev')
-const rendererLyricConfig = require('./renderer-lyric/webpack.config.dev')
-const rendererScriptConfig = require('./renderer-scripts/webpack.config.dev')
+const mainConfig = require(paths.buildConfig + '/main/webpack.config.dev')
+const rendererConfig = require(paths.buildConfig + '/renderer/webpack.config.dev')
+const rendererLyricConfig = require(paths.buildConfig + '/renderer-lyric/webpack.config.dev')
+const rendererScriptConfig = require(paths.buildConfig + '/renderer-scripts/webpack.config.dev')
 const {Arch} = require('electron-builder')
-const replaceLib = require('./build-before-pack')
+const replaceLib = require(paths.buildConfig + '/build-before-pack')
 const treeKill = require('tree-kill')
-const {debounce} = require('./utils')
+const {debounce} = require(paths.buildConfig + '/utils')
 
 let electronProcess = null
 let hotMiddlewareRenderer
@@ -25,13 +27,15 @@ let hotMiddlewareRendererLyric
 
 // 复制 build-config/lib 下的 vue-devtools 整体复制到 dist 目录下
 const fs = require('node:fs/promises');
-const path2 = require('node:path');
+// const path2 = require('node:path');
 
 async function copyLibToDist() {
     // runner-dev.js __dirname: C:\Users\EDY\code\lx-music-desktop\build-config
     console.log(`runner-dev.js __dirname: ${__dirname}`);
-    const source = path2.join(__dirname, "../build-config/lib/vue-devtools");
-    const destination = path2.join(__dirname, "../dist/build-config/lib/vue-devtools");
+    // const source = path2.join(__dirname, "../build-config/lib/vue-devtools");
+    const source = paths.buildConfig + "/lib/vue-devtools"
+    // const destination = path2.join(__dirname, "../dist/build-config/lib/vue-devtools");
+    const destination = paths.dist + "/build-config/lib/vue-devtools"
     await fs.cp(source, destination, {
         recursive: true,
         force: true,

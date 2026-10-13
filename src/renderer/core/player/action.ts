@@ -137,6 +137,7 @@ export const setMusicUrl = (musicInfo: LX.Music.MusicInfo | LX.Download.ListItem
         console.log(err)
         setAllStatus(err.message)
         window.app_event.error()
+        window.app_event.playerError()
         if (appSetting['player.autoSkipOnError']) addDelayNextTimeout()
     }).finally(() => {
         if (musicInfo === playMusicInfo.musicInfo) {

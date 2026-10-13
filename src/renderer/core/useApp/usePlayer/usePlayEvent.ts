@@ -65,7 +65,7 @@ export default () => {
             const otherSources = await getOtherSource(currentMusic)
             if (!otherSources.length) return false
 
-            const currentSource = 'progress' in currentMusic ? currentMusic.metadata.musicInfo.source : currentMusic.source
+            const currentSource = ('progress' in currentMusic ? currentMusic.metadata.musicInfo.source : currentMusic.source) as LX.OnlineSource
             const { url } = await getOnlineOtherSourceMusicUrl({
                 musicInfos: [...otherSources],
                 onToggleSource: () => {},

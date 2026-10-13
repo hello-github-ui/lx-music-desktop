@@ -184,12 +184,12 @@ export default () => {
         const builtinList = list.filter(api => /^builtin_/.test(api.id))
         const isCurrentValid = list.some(api => api.id === currentSource) || apiSourceInfo.some(api => api.id === currentSource && !api.disabled)
         if (!isCurrentValid && builtinList.length) {
-            // 音源优先级列表（排在前面的优先选中），跳过已知有问题的音源
+            // 音源优先级列表（排在前面的优先选中）
             const preferredOrder = [
                 'builtin_ikun-source',
                 'builtin_六音自定义源',
                 'builtin_肥猫不肥',
-                'builtin_Huibq_lxmusic源',
+                'builtin_聚合API接口',
             ]
             let target = builtinList.find(api => preferredOrder.includes(api.id)) ?? builtinList[0]
             console.log(`当前音源「${currentSource}」不可用，自动切换到内置音源「${target.name}」`)

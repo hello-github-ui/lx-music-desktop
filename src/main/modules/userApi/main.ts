@@ -80,6 +80,7 @@ export const createWindow = async(userApi: LX.UserApi.UserApiInfo) => {
         roundedCorners: false,
         hasShadow: false,
         show: false,
+        icon: path.join(__dirname, "icon.png"), // 设置窗口图标
         webPreferences: {
             contextIsolation: true,
             // worldSafeExecuteJavaScript: true,
